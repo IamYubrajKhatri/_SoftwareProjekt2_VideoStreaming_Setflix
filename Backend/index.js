@@ -1,47 +1,34 @@
 // const is a variable deklaration
+//setflix_db the name of my database :i gave it to my mongodburi before the?
 /*const express = require('express');
 const dotenv = require('dotenv');
-
-mongo db _clustero-username yubrajkhatri
-password: nR8ehGCzdCwAr3tV
-
-mongo uri : mongodb+srv://yubrajkhatri:<db_password>@cluster0.twv65.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-
 */
+
 import express from "express";
-import dotenv from "dotenv";
-import mongoose from "mongoose";
+import authRoute from "./route/auth.route.js";
+import { Env_Vars } from "./config/env.Vars.js";
+import { connectDB } from "./config/db.js";
+
 const app = express();
 
-dotenv.config();
-
-const PORT=process.env.PORT || 4000;
 
 
 //connect to mongo db
 //console.log("Mongouri ", process.env.MongoDBURI); this code shows where is it connected on which uri in console
-const DBURI=process.env.MongoDBURI;
 
-try {
-    mongoose.connect(DBURI)
-    console.log("Connected to MongoDB");
-} catch (error) {
-    console.log("Error: ", error);
-    
-}
- 
+const PORT=Env_Vars.PORT;
+connectDB();//function called for a database connection
+app.use(express.json());// will allow us to use req.body ..for eg i use postman to give the data entry in json format.
+app.use("/auth", authRoute);//we created a variable name authRoutes for the files and imported it
 
-
-
-
-
-
-
-
-app.get('/', (req, res) => {                   // / is a home route
+/*
+app.get('/', (req, res) => {         // / is a home route
   res.send('Hello World! yubraj khatri')
 })
+*/
 
+
+//to show on terminal if its actually running or not
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`)
 })
