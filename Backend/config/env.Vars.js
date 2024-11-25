@@ -1,4 +1,5 @@
 //to store the .env variable and make index.js more clean i make this file
+//The value for MongodbUri is stored in .env files
 
 import dotenv from "dotenv";
 

@@ -17,16 +17,17 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    image :{
-        type: String,
-        default: ""
+    isVerified:{
+        type:Boolean,
+        default:false,
     },
+    verificationCode:String,
     searchHistory :{
         type: Array,
         default: []
     }
 
-})
+},{timestamps:true})
 
 
 //now we create a modele for avobe designed schema
