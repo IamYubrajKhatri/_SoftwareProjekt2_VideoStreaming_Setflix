@@ -18,8 +18,6 @@ export const SendVerificationCode=async(email,verificationCode)=>{
     }
 }
 
-
-
 export const WelcomeEmail=async(email,username)=>{
     try {
         const res = await transporter.sendMail({

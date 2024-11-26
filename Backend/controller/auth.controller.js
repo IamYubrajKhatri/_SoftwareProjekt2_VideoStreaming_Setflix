@@ -4,8 +4,8 @@ import User from "../model/user.model.js"
 //to hash the password we use bycryptjs
 import bcryptjs from "bcryptjs";
 //to send verification code
-import { SendVerificationCode} from "../config/Email.js"
-import { WelcomeEmail } from "../config/Email.js";
+import { SendVerificationCode} from "../middleware/Email.js"
+import { WelcomeEmail } from "../middleware/Email.js";
 import { generateTokenAndSetCookie } from "../utils/generateToken.js";
 
 // export const signup=(req,res)=>{} an alternative to down one
@@ -67,7 +67,7 @@ export async function signup(req,res){
         res.status(500).json({sucess:false,message: "Internal server error"})
     }
 }
-
+//email verification through email push
 export const VerifyEmail=async(req,res)=>{
     try {
         //
@@ -94,7 +94,6 @@ export const VerifyEmail=async(req,res)=>{
     }
 }
 
-
 //login
 export async function Login(req,res){
     try {
@@ -119,7 +118,7 @@ export async function Login(req,res){
         }
 
           //json web token
-        generateTokenAndSetCookie(user._id,res);
+        generateTokenAndSetCookie(user._id,res);//_id is a user unique number stored in mongodb first line
         res.status(200).json({success:true, message: "Login successfull"})
 
 
@@ -130,10 +129,7 @@ export async function Login(req,res){
     }
 }
 
-
-
 //logout
-
 export async function Logout(req,res) {
     try {
         res.clearCookie("jwt-setflix");
