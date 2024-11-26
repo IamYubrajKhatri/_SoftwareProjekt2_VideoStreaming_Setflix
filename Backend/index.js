@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 
 import express from "express";
 import authRoute from "./route/auth.route.js";
+import movieRoutes from "./route/movie.route.js"
 import { Env_Vars } from "./config/env.Vars.js";
 import { connectDB } from "./config/db.js";
 
@@ -19,7 +20,8 @@ const app = express();
 const PORT=Env_Vars.PORT;
 connectDB();//function called for a database connection
 app.use(express.json());// will allow us to use req.body ..for eg i use postman to give the data entry in json format.
-app.use("/auth", authRoute);//we created a variable name authRoutes for the files and imported it
+app.use("/auth", authRoute);//we created a variable name authRoutes for the files and imported it above so it goes to specific destination
+app.use("/movie",movieRoutes);
 
 /*
 app.get('/', (req, res) => {         // / is a home route
