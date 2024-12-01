@@ -9,6 +9,8 @@ import express from "express";
 import authRoute from "./route/auth.route.js";
 import movieRoutes from "./route/movie.route.js"
 import tvRoutes from "./route/tv.route.js"
+import searchRoutes from "./route/search.route.js"
+
 
 import { Env_Vars } from "./config/env.Vars.js";
 import { connectDB } from "./config/db.js";
@@ -29,8 +31,9 @@ app.use(express.json());// will allow us to use req.body ..for eg i use postman 
 app.use(cookieParser());
 app.use("/auth", authRoute);//we created a variable name authRoutes for the files and imported it above so it goes to specific destination
 app.use("/movie",protectRoute,movieRoutes);
-
 app.use("/tv",protectRoute,tvRoutes);
+app.use("/search",protectRoute,searchRoutes);
+
 /*
 app.get('/', (req, res) => {         // / is a home route
   res.send('Hello World! yubraj khatri')
