@@ -12,6 +12,7 @@ import tvRoutes from "./route/tv.route.js"
 import searchRoutes from "./route/search.route.js"
 
 
+
 import { Env_Vars } from "./config/env.Vars.js";
 import { connectDB } from "./config/db.js";
 import { protectRoute } from "./middleware/protectRoute.js";
@@ -33,6 +34,7 @@ app.use("/auth", authRoute);//we created a variable name authRoutes for the file
 app.use("/movie",protectRoute,movieRoutes);
 app.use("/tv",protectRoute,tvRoutes);
 app.use("/search",protectRoute,searchRoutes);
+
 
 /*
 app.get('/', (req, res) => {         // / is a home route

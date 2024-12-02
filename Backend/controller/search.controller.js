@@ -118,19 +118,32 @@ export async function getSearchHistory(req,res) {
         es.status(500).json({success: false,message:"Internal server eror during getting search history"})
     }
 }
+
 export async function removeItemFromSearchHistory(req,res) {
 //we are updating varible so let keyword
     let { id } = req.params;
-    //converting string to integer
+//if there no user rxisted
+    if (!id || isNaN(id)) {
+        return res.status(400).json({ success: false, message: "Invalid ID provided" });}
+//converting string to integer
     id = parseInt(id);
     try {
+         const user = await User.findById(req.user._id);
+         // Check if the item exists in the search history
+         //some is a method in js functions for array used to test  whether at least one element in the array satisfies the provided condition 
+         //user search history [{id,image,title,..},{id,image,title,..},{id,image,title,..}...]
+         //item is a variable name i set...some() checks the item id  if it matches 
+         const itemExists = user.searchHistory.some((item) => item.id === id);
+         if (!itemExists) {
+             return res.status(404).json({ success: false, message: "Item not found in search history" });
+         }
       // Update the user's search history
-        await User.findByIdAndUpdate(req.user._id,{
+       const result= await User.findByIdAndUpdate(req.user._id,{
             //to delete we use pull 
-            $pull:{
-                searchHistory:{  id:id },
-            },
-        });
+            $pull:{searchHistory:{  id:id }}});
+        if (!result) {
+            return res.status(404).json({ success: false, message: "Item not found or already removed" });
+        }
         res.status(200).json({ success:true ,message:"Item have been removed"});
 
     } catch (error) {
@@ -140,5 +153,4 @@ export async function removeItemFromSearchHistory(req,res) {
     
     
 }
-
 

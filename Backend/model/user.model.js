@@ -25,7 +25,11 @@ const userSchema = mongoose.Schema({
     searchHistory :{
         type: Array,
         default: []
-    }
+    },
+    favorite:{
+        type: Array,
+        default: []
+    },
 
 },{timestamps:true})
 
