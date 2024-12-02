@@ -4,9 +4,9 @@ import User from "../model/user.model.js"
 //to hash the password we use bycryptjs
 import bcryptjs from "bcryptjs";
 //to send verification code
-import { SendVerificationCode} from "../middleware/Email.js"
-import { WelcomeEmail } from "../middleware/Email.js";
+import { SendVerificationCode, sendResetPasswordOtp,WelcomeEmail ,resetPasswordSuccessfullEmail} from "../middleware/Email.js"
 import { generateTokenAndSetCookie } from "../utils/generateToken.js";
+
 
 // export const signup=(req,res)=>{} an alternative to down one
 export async function signup(req,res){
@@ -44,6 +44,7 @@ export async function signup(req,res){
 
         //lets create a otp or verification code
         //this generate a otp of 6 digit for every user
+        //math floor round up to nearest one and math random a float number between 0 and 1
         const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
 
@@ -141,3 +142,97 @@ export async function Logout(req,res) {
     }
     
 }
+
+//otp generation endpoint 
+export async function forgotPassword(req,res){
+    const { email }= req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" })};
+
+        // Generate a 6-digit OTP 
+        const resetPasswordOtp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        // Set OTP expiration (e.g., 10 minutes)
+        //left sides are the variables that i created and will be saved in database
+        user.resetPasswordOtp = resetPasswordOtp;
+        user.resetPasswordOtpExpires = Date.now() + 600000; // 10 minutes from now(10 min = 10*60*1000 ms)
+        await user.save();
+
+        sendResetPasswordOtp(user.email,resetPasswordOtp);
+        res.status(200).json({ success: true, message: "OTP sent to email" });
+          
+    } catch (error) {
+        console.error("Error in forgotPassword:", error.message);
+    res.status(500).json({ success: false, message: "Internal server error while forget  password" });
+    }
+}
+
+//otp verefication and password reset endpoint
+export async function resetPassword(req,res) {
+    const { resetPasswordOtp ,newPassword } =req.body;
+
+    try {
+        // Find the user by the OTP and check if it has expired
+        const user = await User.findOne({
+          resetPasswordOtp,
+          resetPasswordOtpExpires: { $gt: Date.now() }  // Check if OTP is still valid
+        });
+
+    
+        if (!user) {
+          return res.status(400).json({ success: false, message: "Invalid or expired OTP" });
+        }
+
+        // Check if the new password is the same as the old password
+    const isSamePassword = await bcryptjs.compare(newPassword, user.password);
+    if (isSamePassword) {
+      return res.status(400).json({ success: false, message: "New password cannot be the same as the old password" });
+    }
+
+//this compares all the encrypted password of the array parally 
+    const isPreviousPassword = await Promise.all(user.previousPasswords.map(async (prevPassword) => {
+        return await bcryptjs.compare(newPassword, prevPassword);
+      }));
+  
+      // If the new password matches any of the previous passwords, return an error
+      if (isPreviousPassword.includes(true)) {
+        return res.status(400).json({ success: false, message: "New password cannot be the same as any of the previous passwords" });
+      }
+
+      
+    
+        // Hash the new password
+        const salt = await bcryptjs.genSalt(10);
+        const hashedPassword = await bcryptjs.hash(newPassword, salt);
+        user.password=hashedPassword;
+    
+
+        user.previousPasswords.unshift(hashedPassword); // Add new password to the front of the array
+      if (user.previousPasswords.length > 3) {
+        user.previousPasswords.pop(); // Remove the oldest password to maintain the array length (3 in this case)
+      }
+
+
+
+        // Clear the OTP and expiration fields after the password is reset
+        user.resetPasswordOtp = undefined;
+        user.resetPasswordOtpExpires = undefined;
+
+        user.isPasswordReseted = true,
+        await resetPasswordSuccessfullEmail(user.email,user.username);
+        user.isPasswordReseted = false,
+        await user.save();
+    
+        res.status(200).json({ success: true, message: "Password reset successful" });
+
+    }catch(error){
+        console.error("Error in resetPassword:", error.message);
+    res.status(500).json({ success: false, message: "Internal server error resetting password" });
+    }
+}
+    
+    
+

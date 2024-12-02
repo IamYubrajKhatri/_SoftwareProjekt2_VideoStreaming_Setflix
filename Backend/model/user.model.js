@@ -17,9 +17,25 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    resetPasswordOtp :{
+        type: String,
+        default:undefined,
+    },
+    resetPasswordOtpExpires :{
+        type: Date,
+        default:undefined,
+    },
+    isPasswordReseted:{
+        type:Boolean,
+        default:false,
+    },
     isVerified:{
         type:Boolean,
         default:false,
+    },
+    previousPasswords:{
+        type: [String], // This will store an array of password hashes
+    default: [],
     },
     verificationCode:String,
     searchHistory :{
