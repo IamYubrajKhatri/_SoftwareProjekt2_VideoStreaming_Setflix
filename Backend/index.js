@@ -11,8 +11,8 @@ import movieRoutes from "./route/movie.route.js"
 import tvRoutes from "./route/tv.route.js"
 import searchRoutes from "./route/search.route.js"
 
-import adminAuthRoute from "./route/adminAuth.route.js"
-import adminDashboardRoute from "./route/adminDashboard.route.js"
+import adminRoute from "./route/admin.route.js"
+
 
 
 
@@ -21,7 +21,7 @@ import { connectDB } from "./config/db.js";
 import { protectRoute } from "./middleware/protectRoute.js";
 
 import cookieParser from "cookie-parser";
-import { protectAdminRoute } from "./middleware/protectAdminRoute.js";
+
 
 const app = express();
 
@@ -40,8 +40,8 @@ app.use("/movie",protectRoute,movieRoutes);
 app.use("/tv",protectRoute,tvRoutes);
 app.use("/search",protectRoute,searchRoutes);
 
-app.use("/adminAuth", adminAuthRoute);
-app.use("/adminDashboard",protectAdminRoute,adminDashboardRoute);
+app.use("/admin", adminRoute);
+
 
 /*
 app.get('/', (req, res) => {         // / is a home route

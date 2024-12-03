@@ -128,6 +128,12 @@ export async function Login(req,res){
             return res.status(404).json({success:false,message: "Invalid Credentials"});
         }
 
+        user.isLoggedin = true;
+        await user.save();
+
+
+        
+
         //json web token to start a session
         generateTokenAndSetCookie(user._id,res);//_id is a user unique number stored in mongodb first line
         res.status(200).json({success:true, message: "Login successfull"})
@@ -143,6 +149,18 @@ export async function Login(req,res){
 //logout
 export async function Logout(req,res) {
     try {
+        const userId = req.user?._id; // user info is in req.user from middleware
+        if (!userId) {
+            return res.status(401).json({ success: false, message: "Unauthorized/No token available" });
+        }
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        user.isLoggedin = false;
+        await user.save();
+
         res.clearCookie("jwt-setflix");
         res.status(200).json({sucess:true, message: "Logged out successfully"});
         
@@ -161,6 +179,11 @@ export async function forgotPassword(req,res){
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" })};
+
+            //user.isLoggedin === true
+            if (user.isLoggedin) {
+                return res.status(403).json({ success: false, message: "You cannot reset your password while logged in" });
+            }
 
         // Generate a 6-digit OTP 
         const resetPasswordOtp = Math.floor(100000 + Math.random() * 900000).toString();

@@ -25,14 +25,6 @@ const userSchema = mongoose.Schema({
         type: Date,
         default:undefined,
     },
-    isPasswordReseted:{
-        type:Boolean,
-        default:false,
-    },
-    isVerified:{
-        type:Boolean,
-        default:false,
-    },
     previousPasswords:{
         type: [String], // This will store an array of password hashes
     default: [],
@@ -50,6 +42,17 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false,//default is a regular user
     },
+    isLoggedin:{
+        type:Boolean,
+        default:false,
+    },isVerified:{
+        type:Boolean,
+        default:false,
+    },
+    isPasswordReseted:{
+        type:Boolean,
+        default:false,
+    }
 
 },{timestamps:true})
 

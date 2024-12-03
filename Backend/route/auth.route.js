@@ -1,6 +1,7 @@
 import express from "express";
 //we import signup function from controller.js
 import { signup,VerifyEmail,Login ,Logout,forgotPassword,resetPassword } from "../controller/auth.controller.js";
+import { protectRoute } from "../middleware/protectRoute.js";
 
 const router = express.Router();
 //the Router acts as a mini app that you can attach middelware and route handler to.
@@ -8,7 +9,7 @@ const router = express.Router();
 router.post("/signup",signup);
 router.post("/verifyemail",VerifyEmail);
 router.post("/login",Login);
-router.post("/logout",Logout);
+router.post("/logout",protectRoute,Logout);
 router.post("/forgot-password",forgotPassword);
 router.post("/reset-password", resetPassword);
 
