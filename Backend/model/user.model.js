@@ -46,6 +46,10 @@ const userSchema = mongoose.Schema({
         type: Array,
         default: []
     },
+    isAdmin:{
+        type: Boolean,
+        default: false,//default is a regular user
+    },
 
 },{timestamps:true})
 

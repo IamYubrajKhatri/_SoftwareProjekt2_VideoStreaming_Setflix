@@ -11,6 +11,9 @@ import movieRoutes from "./route/movie.route.js"
 import tvRoutes from "./route/tv.route.js"
 import searchRoutes from "./route/search.route.js"
 
+import adminAuthRoute from "./route/adminAuth.route.js"
+import adminDashboardRoute from "./route/adminDashboard.route.js"
+
 
 
 import { Env_Vars } from "./config/env.Vars.js";
@@ -18,6 +21,7 @@ import { connectDB } from "./config/db.js";
 import { protectRoute } from "./middleware/protectRoute.js";
 
 import cookieParser from "cookie-parser";
+import { protectAdminRoute } from "./middleware/protectAdminRoute.js";
 
 const app = express();
 
@@ -30,11 +34,14 @@ const PORT=Env_Vars.PORT;
 connectDB();//function called for a database connection
 app.use(express.json());// will allow us to use req.body ..for eg i use postman to give the data entry in json format.
 app.use(cookieParser());
-app.use("/auth", authRoute);//we created a variable name authRoutes for the files and imported it above so it goes to specific destination
+//we created a variable name authRoutes for the files and imported it above so it goes to specific destination
+app.use("/auth", authRoute);
 app.use("/movie",protectRoute,movieRoutes);
 app.use("/tv",protectRoute,tvRoutes);
 app.use("/search",protectRoute,searchRoutes);
 
+app.use("/adminAuth", adminAuthRoute);
+app.use("/adminDashboard",protectAdminRoute,adminDashboardRoute);
 
 /*
 app.get('/', (req, res) => {         // / is a home route

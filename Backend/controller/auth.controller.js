@@ -8,6 +8,7 @@ import { SendVerificationCode, sendResetPasswordOtp,WelcomeEmail ,resetPasswordS
 import { generateTokenAndSetCookie } from "../utils/generateToken.js";
 
 
+
 // export const signup=(req,res)=>{} an alternative to down one
 export async function signup(req,res){
     try {
@@ -101,14 +102,23 @@ export async function Login(req,res){
         //user input
         const { email, password} = req.body
 
+
         //the first one is database email and second is the user input
         if(!email || !password){
             return res.status(400).json({success: false, message: "All fields are required"});
         }
 
+
+        const admin = await User.findOne({email,isAdmin:true})
+        if(admin){
+            return res.status(400).json({ success: false, message: 'Please login as Admin' });
+        }
         const user = await User.findOne({email: email})
         if(!user){
             return res.status(404).json({success:false,message: "Invalid Credentials"});
+        }
+        if (!user.isVerified) {
+            return res.status(401).json({ success: false, message: "Please verify your email to login" });
         }
 
 
@@ -118,7 +128,7 @@ export async function Login(req,res){
             return res.status(404).json({success:false,message: "Invalid Credentials"});
         }
 
-          //json web token
+        //json web token to start a session
         generateTokenAndSetCookie(user._id,res);//_id is a user unique number stored in mongodb first line
         res.status(200).json({success:true, message: "Login successfull"})
 
@@ -233,6 +243,7 @@ export async function resetPassword(req,res) {
     res.status(500).json({ success: false, message: "Internal server error resetting password" });
     }
 }
+
     
     
 

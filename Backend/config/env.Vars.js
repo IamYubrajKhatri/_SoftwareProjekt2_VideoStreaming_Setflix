@@ -11,6 +11,8 @@ export const Env_Vars = {
 
     JWT_SECRET: process.env.JWT_SECRET,
     NODE_ENV: process.env.NODE_ENV,
+    ADMIN_SECRET_KEY:process.env.ADMIN_SECRET_KEY,
+
 
     TMDB_API_KEY: process.env.TMDB_API_KEY,
 }
