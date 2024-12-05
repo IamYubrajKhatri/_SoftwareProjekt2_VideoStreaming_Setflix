@@ -1,5 +1,6 @@
 import { fetchFromTMDB } from "../services/tmdb.service.js";
 import User from "../model/user.model.js"
+import Video from "../model/video.model.js";
 
 export async function getTrendingMovie(req,res) {
     try {
@@ -158,3 +159,12 @@ export async function removeMovieFromFavorite(req,res){
     
 
 }
+export const getVisibleVideos = async (req, res) => {
+    try {
+        const videos = await Video.find({ isHidden: false });
+        res.status(200).json({ success: true, videos });
+    } catch (error) {
+        console.error("Error fetching videos:", error.message);
+        res.status(500).json({ success: false, message: "Internal server error during fetching videos" });
+    }
+};

@@ -1,5 +1,6 @@
 import bcryptjs from "bcryptjs";
 import User from "../model/user.model.js"
+import Video from "../model/video.model.js";
 import { generateTokenAndSetCookieAdmin } from "../utils/generateToken.js";
 import { SendVerificationCode} from "../middleware/Email.js"
 import { Env_Vars } from "../config/env.Vars.js";
@@ -190,3 +191,73 @@ export async function deleteUser(req,res){
         res.status(500).json({ success: false, message: "Internal server error while deleting user" });
     }
 }
+
+export async function uploadVideo(req,res){
+    const { title, description, videoUrl } = req.body;
+    const adminId = req.user._id;
+    if (!title || !description || !videoUrl) {
+        return res.status(400).json({ success: false, message: "All fields are required" });
+    }
+    try {
+        const newVideo = new Video({
+            title,
+            description,
+            videoUrl,
+            uploadedBy: adminId,
+        });
+        await newVideo.save();
+        res.status(201).json({ success: true, message: "Video uploaded successfully", video: newVideo });
+    } catch (error) {
+        console.error("Error uploading video:", error.message);
+        res.status(500).json({ success: false, message: "Internal server error during video upload" });
+    }
+}
+export async function deleteVideo(req, res) {
+    const { videoId } = req.params;
+
+    try {
+        const video = await Video.findById(videoId);
+        if (!video) {
+            return res.status(404).json({ success: false, message: "Video not found" });
+        }
+
+        await video.deleteOne();
+        res.status(200).json({ success: true, message: "Video deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting video:", error.message);
+        res.status(500).json({ success: false, message: "Internal server error during video deletion" });
+    }
+};
+export async function toggleVideoVisibility(req,res) {
+    const { videoId } = req.params;
+    try {
+        const video = await Video.findById(videoId);
+        if (!video) {
+            return res.status(404).json({ success: false, message: "Video not found" });
+        }
+
+        //it will flip the value
+        video.isHidden = !video.isHidden;
+        await video.save();
+
+        res.status(200).json({
+            success: true,
+            message: `Video is now ${video.isHidden ? "hidden" : "visible"}`,
+            video,
+        });
+    } catch (error) {
+        console.error("Error toggling video visibility:", error.message);
+        res.status(500).json({ success: false, message: "Internal server error during visibility toggle" });
+    }
+}
+export const getAllVideos = async (req, res) => {
+    try {
+        // Fetch all videos regardless of their visibility
+        const videos = await Video.find();
+        res.status(200).json({ success: true, videos });
+    } catch (error) {
+        console.error("Error fetching all videos:", error.message);
+        res.status(500).json({ success: false, message: "Internal server error during fetching videos" });
+    }
+};
+
