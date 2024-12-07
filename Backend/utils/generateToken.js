@@ -3,16 +3,17 @@ import { Env_Vars } from "../config/env.Vars.js"
 
 export const generateTokenAndSetCookie = (userId,res) =>{
   //rhis line create  jws web token with three things payload(userId),secret(my secret to sign the token)and expiration
-  const token = jwt.sign({userId}, Env_Vars.JWT_SECRET, {expiresIn:"1d"}) ; 
+  const token = jwt.sign({userId}, Env_Vars.JWT_SECRET, {expiresIn:"5 hours"}) ; 
 
 
 
   //this function stores the jwt token in a cookie called jwt-setflix
   res.cookie("jwt-setflix",token,{
-    maxAge:24*60*60*1000, // 1 days in ms
-    httpOnly:true,//cannot be accessed by javascript
-    sameSite: "strict",//only in same origin
-    secure: Env_Vars.NODE_ENV !== "development",//only be sent over https during produvtion so token will not be exposed
+    maxAge:5*60*60*1000, // 1 days in ms
+    httpOnly:true,//true cannot be accessed by javascript,false can be accessed
+    sameSite: "lax",//'strict'for only in same origin(port) 'lax' for vross origin
+    //secure: Env_Vars.NODE_ENV !== "development",//only be sent over https during produvtion so token will not be exposed
+    secure:false//disable secure in development
 
 })
 

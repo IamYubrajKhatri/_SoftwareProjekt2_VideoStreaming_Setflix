@@ -5,7 +5,7 @@ import User from "../model/user.model.js"
 import bcryptjs from "bcryptjs";
 //to send verification code
 import { SendVerificationCode, sendResetPasswordOtp,WelcomeEmail ,resetPasswordSuccessfullEmail} from "../middleware/Email.js"
-import { generateTokenAndSetCookie } from "../utils/generateToken.js";
+import { generateTokenAndSetCookie } from "../utils/generateToken.js"
 
 
 
@@ -61,7 +61,7 @@ export async function signup(req,res){
         await createdNewUser.save();
 
         SendVerificationCode(createdNewUser.email,verificationCode);
-        res.status(201).json({message:"User created successfully"})
+        res.status(201).json({message:"User created successfully",createdNewUser})
         
     } catch (error) {
 
@@ -73,10 +73,12 @@ export async function signup(req,res){
 export const VerifyEmail=async(req,res)=>{
     try {
         //
-        const { code } =req.body
+        const { email,code } =req.body
         //find the user from database with the help of matching verificationCode
+        //left datenbank right cleint side or frontend
         const toBeVerifiedUser=await User.findOne({
-            verificationCode:code
+            verificationCode:code,
+            email:email
         })
         if(!toBeVerifiedUser){
             return res.status(400).json({sucess:false,message:"Invalid or expired code"})
@@ -136,7 +138,7 @@ export async function Login(req,res){
 
         //json web token to start a session
         generateTokenAndSetCookie(user._id,res);//_id is a user unique number stored in mongodb first line
-        res.status(200).json({success:true, message: "Login successfull"})
+        res.status(200).json({success:true, message: "Login successfull",user})
 
 
 

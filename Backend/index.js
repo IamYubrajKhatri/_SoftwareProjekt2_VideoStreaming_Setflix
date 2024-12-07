@@ -13,7 +13,8 @@ import searchRoutes from "./route/search.route.js"
 
 import adminRoute from "./route/admin.route.js"
 
-
+// Import CORS middleware helps to connet twi different front and backend ports
+import cors from 'cors'; 
 
 
 import { Env_Vars } from "./config/env.Vars.js";
@@ -25,6 +26,13 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
+
+// Enable CORS for the frontend (http://localhost:5173)
+app.use(cors({
+  origin: 'http://localhost:5173', // Frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE','Path'], // Allowed HTTP methods
+  credentials: true // If you need to allow cookies or Authorization headers
+}));
 
 
 //connect to mongo db
