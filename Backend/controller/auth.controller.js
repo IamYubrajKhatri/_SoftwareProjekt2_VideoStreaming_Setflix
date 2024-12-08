@@ -7,8 +7,6 @@ import bcryptjs from "bcryptjs";
 import { SendVerificationCode, sendResetPasswordOtp,WelcomeEmail ,resetPasswordSuccessfullEmail} from "../middleware/Email.js"
 import { generateTokenAndSetCookie } from "../utils/generateToken.js"
 
-
-
 // export const signup=(req,res)=>{} an alternative to down one
 export async function signup(req,res){
     try {
@@ -207,6 +205,9 @@ export async function forgotPassword(req,res){
 
 //otp verefication and password reset endpoint
 export async function resetPassword(req,res) {
+
+    
+
     const { resetPasswordOtp ,newPassword } =req.body;
 
     try {

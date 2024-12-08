@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom'
 import { useForm } from "react-hook-form"
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 
-function Login() {
+function Login({onLoginSuccess}) {
   {/* to submit the form on browser hook form*/}
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -18,23 +21,37 @@ function Login() {
     password:data.password
   }
 
-  await axios.post("http://localhost:4001/auth/login",userInfoLogin,{
-    withCredentials: true // Enables sending/receiving cookies
-})
-  .then((res)=>{
-    console.log(res.data)
+try {
+  const res = await axios.post("http://localhost:4001/api/auth/login",userInfoLogin,{
+    withCredentials: true })// Enables sending/receiving cookies
     if(res.data){
-      toast.success('Login Successfull!');
+      console.log(res.data)
+
+      if(res.data.success){
+        toast.success('Login Successfull!');
+        onLoginSuccess(res.data.user); // Notify parent Navbar about logged-in user
+         // Close the modal
+         document.getElementById("my_modal_3").close();
+         //then navigate
+        navigate("/");
+        localStorage.setItem("LoggedinUser",JSON.stringify(res.data.user));
+      }
+      
+
     }
-    localStorage.setItem("LoggedinUser",JSON.stringify(res.data.user));
-  }).catch((err)=>{
-    if(err.response){
-      console.log(err)
-      toast.error("Login unsuccessfull: "+ err.response.data.message);
-      {/* this message is in backend signup definded by us */}
-    }
-  })
+} catch (err) {
+  if(err.response){
+    console.log(err)
+    toast.error("Login unsuccessfull: "+ err.response.data.message);
+    {/* this message is in backend signup definded by us */}
+  }
 }
+
+  
+}
+
+
+
 
   return (
     <>
@@ -76,15 +93,21 @@ function Login() {
 
 
      {/* Button */}
-     <div className='flex justify-around mt-4'>
+     <div className=' flex justify-around mt-4'>
       <button className="btn btn-error  text-white hover:text-black  ">
         Login</button>
-        <p className='py-3'> No account? {" "} 
+        </div>
+        <div className='flex justify-around mt-4'>
+        <p className='py-3 '> Forget Password? {" "} 
+          <Link to="/forget-password" className='underline text-blue-500 cursor-pointer  '>
+          Reset</Link>{" "}
+        </p>
+        <p className='py-3 justify-around'> No account? {" "} 
           <Link to="/signup" className='underline text-blue-500 cursor-pointer  '>
           Signup</Link>{" "}
         </p>
         </div>
-
+        
 
      </form>  
 

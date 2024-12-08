@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-function VerifyEmail() {
+function ResetPassword() {
     //to navigate to other page 
     const navigate = useNavigate();
 
@@ -19,23 +19,24 @@ function VerifyEmail() {
         //we send server or backend a post req with the given user credientals
         //we put user given email and code with data.email data.code
         //left side is like postman variable we created in backend(email,code) 
-      const res = await axios.post("http://localhost:4001/api/auth/verifyemail", {
+      const res = await axios.post("http://localhost:4001/api/auth/reset-password", {
         
-        email: data.email,
-        code: data.code,
+        
+        resetPasswordOtp:data.code,
+        newPassword:data.password
       });
     //it checks if server/backend response and contains data
     //it holds a payload sent by backend after our post req.
     //if res.data is truthly then it is finished or eamil is verified
 
       if (res.data) {
-        toast.success("Email verified successfully!");
+        toast.success("Password reseted successfully!");
         // Optionally redirect to the login page
         navigate("/"); // Redirect to home page where we login
       }
     } catch (err) {
       if (err.response) {
-        toast.error("Verification failed: " + err.response.data.message);
+        toast.error("Password reset failed: " + err.response.data.message);
       } else {
         toast.error("An unexpected error occurred.");
       }
@@ -53,20 +54,7 @@ function VerifyEmail() {
         onSubmit={handleSubmit(onSubmit)}
         className="bg-slate-100 p-8 rounded-xl border shadow-md w-96"
       >
-        <h2 className="text-2xl font-bold mb-4">Verify Your Email</h2>
-
-        <div className="mb-4">
-          <label className="block mb-2">Email</label>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="w-full px-4 py-2 border rounded"
-            {...register("email", { required: "Email is required" })}
-          />
-          {errors.email && (
-            <span className="text-red-500 text-sm">{errors.email.message}</span>
-          )}
-        </div>
+        <h2 className="text-2xl font-bold mb-4">Reset Your Password</h2>
 
         <div className="mb-4">
           <label className="block mb-2">Verification Code</label>
@@ -81,11 +69,24 @@ function VerifyEmail() {
           )}
         </div>
 
+        <div className="mb-4">
+          <label className="block mb-2">New Password</label>
+          <input
+            type="text"
+            placeholder="Enter a new Password"
+            className="w-full px-4 py-2 border rounded"
+            {...register("password", { required: "Password is required" })}
+          />
+          {errors.code && (
+            <span className="text-red-500 text-sm">{errors.code.message}</span>
+          )}
+        </div>
+
         <button
           type="submit"
-          className="btn btn-error  text-white hover:text-black"
+         className="btn btn-error  text-white hover:text-black"
         >
-          Verify
+          Reset Password
         </button>
       </form>
     </div>
@@ -95,4 +96,4 @@ function VerifyEmail() {
   );
 }
 
-export default VerifyEmail;
+export default ResetPassword;

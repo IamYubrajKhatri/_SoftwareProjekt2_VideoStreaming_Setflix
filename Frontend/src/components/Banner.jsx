@@ -1,8 +1,22 @@
 
 
 import React from 'react'
+import { useState } from 'react';
+import {useNavigate} from "react-router-dom"
 
 function Banner() {
+
+  //email-we declare variable email has initial value of empty string
+  //setEmail-this is the state updater function by react to update the value of email
+  //whenever we call setEmail(abc@gmail.com) react will update email with this value 
+  //re render the component to show the new value
+  //useState("")-initial value is empty strings
+  //This initial value could also be dynamic,like coming from props or location.state (as in my example).
+
+  const [email, setEmail] = useState(""); // Track the email input
+  const navigate = useNavigate();
+
+
   return (
     <>
 <div className="max-w-screen-2xl container mx-auto md:px-20 px-4 flex flex-col lg:flex-row lg:my-10 mb-8 mt-20 ">
@@ -24,10 +38,23 @@ function Banner() {
     <path
       d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
   </svg>
-  <input type="text" className="grow" placeholder="Email" />
+  <input type="email" className="grow" placeholder="Email" value={email}
+                onChange={(e) => setEmail(e.target.value)} />
+                {/* value={email}--Binds the value of the input field to the email state.
+                This makes the input a controlled component — its value is fully controlled by React's state.
+                onChange function is triggerd
+                The event handler (e) => setEmail(e.target.value) is executed.
+                e.target---Refers to the DOM element where the event occurred — in this case, the <input> field.
+                if the user types "abc@example.com" in the input, e.target.value will be "abc@example.com"
+                setEmail updates the email state with the current value of the input field.
+                */}
 </label>
 </div>
-<button className="btn btn-error  text-white hover:text-black mt-5">Signup</button>
+<button className="btn btn-error  text-white hover:text-black mt-5 "
+onClick={() => navigate("/signup", { state: { email } })}>Signup</button>
+{/* navigate -allows to navigate to another route
+{ state: { email } }--it holds value of email variable from the current component
+This state will be accessible on the target route via location.state*/}
    </div>
 
 

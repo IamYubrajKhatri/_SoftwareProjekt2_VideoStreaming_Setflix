@@ -5,12 +5,19 @@ import { useForm } from "react-hook-form"
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useState } from 'react';
 
 
 
 function Signup() {
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const prefilledEmail = location.state?.email || ""; // Get email from state or fallback to an empty string
+  //location.state is where you can pass data when navigating between pages using useNavigate() or <Link>.
+  const [email, setEmail] = useState(prefilledEmail); // Initialize email with the prefilled value
+
 
  {/* to store data from input in browser */}
   const {
@@ -30,7 +37,7 @@ function Signup() {
 
 
     try { {/* do post req to backend and give these value fron userInfo like postman */}
-      const res = await axios.post("http://localhost:4001/auth/signup", userInfo);
+      const res = await axios.post("http://localhost:4001/api/auth/signup", userInfo);
       console.log(res.data)
       if (res.data) {
         toast.success("Signup Successful! Check your email for the verification code.");
@@ -85,7 +92,10 @@ function Signup() {
      <span>Email</span>
      <br />
      <input type='email' placeholder='Please enter your Email' className='w-80 px-10 py-3 border rounded-md outline-none'
-     {...register("email", { required: true })}/>
+     {...register("email", { required: true })}
+     value={email} // Prefill the input
+     onChange={(e) => setEmail(e.target.value)} // Update state when user types
+     />
      <br />
      {errors.email && <span className='text-sm text-red-500'>This field is required</span>}
      </div>
@@ -110,13 +120,7 @@ function Signup() {
       
     </form>
 
- {/*  
-      <div className='my-3 mx-12'>
-      <p className="text-xl">Have account?{" "}
-          <button className="underline text-blue-500 cursor-pointer"
-           onClick={() => document.getElementById("my_modal_3").showModal()}> Login </button>{" "}  <Login /> 
-      </p>
-      </div>*/}
+
     
       </div>
       </div>

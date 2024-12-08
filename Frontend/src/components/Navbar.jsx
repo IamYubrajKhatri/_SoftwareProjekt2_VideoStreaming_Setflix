@@ -2,12 +2,22 @@ import React, { useEffect } from 'react'
 import { Heart } from 'lucide-react';
 import { useState } from 'react';
 import Login from './Login';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+
+import { useNavigate } from 'react-router-dom';
+
 
 
 function Navbar() {
 
     const[sticky,setSticky]= useState(false);
+    const navigate = useNavigate();
 
+
+    const [user, setUser] = useState(null); // State to track logged-in user
+
+    //sticky navbar effect
     useEffect(()=>{
         const handleScroll=()=>{
             if(window.scrollY>0){
@@ -22,6 +32,33 @@ function Navbar() {
         window.addEventListener('scroll',handleScroll);
     }
     },[])
+
+    // Check login state when component mounts
+  useEffect(() => {
+    const checkLoginState = async () => {
+      try {
+        axios.defaults.withCredentials = true; // Ensure cookies are sent
+        const res = await axios.get("http://localhost:4001/api/auth/me");
+        setUser(res.data.user); // Set user info if logged in
+      } catch (err) {
+        setUser(null); // If error, assume user is not logged in
+      }
+    };
+
+    checkLoginState();
+  }, []);
+
+ // Handle logout button click
+ const handleLogout = async () => {
+  try {
+    await axios.post("http://localhost:4001/api/auth/logout");
+    setUser(null); // Clear user state after logout
+    toast.success("Logged out successfully!");
+      navigate("/"); // Redirect to home page
+  } catch (err) {
+    console.error("Logout failed:", err);
+  }
+};
     
     
     const navItems=(<>
@@ -71,6 +108,11 @@ function Navbar() {
     </div>
 
     <a className="btn btn-ghost text-2xl font-bold ">Setflix</a>
+   <a className=' hidden lg:block'>{user ? (
+                
+                <span>Welcome, {user.username}!</span>
+                
+              ) :[]}</a> 
   </div>
 
 {/* endpart*/}
@@ -99,9 +141,16 @@ function Navbar() {
   {/* Heart*/}
 { heartIcon }
   {/* Button*/}
- <div className="">
-   <a className='btn' onClick={()=>document.getElementById("my_modal_3").showModal()} >Login</a>
-  <Login/>
+ <div >
+ {user ? (<button
+                  onClick={handleLogout}
+                  className="btn btn-error  text-white hover:text-black "
+                >
+                  Logout
+                </button>) :(
+   <a className='btn' onClick={()=>document.getElementById("my_modal_3").showModal()} >Login</a>)}
+
+  <Login onLoginSuccess={(loggedInUSer)=>setUser(loggedInUSer)}/>
     </div>
 
   </div>

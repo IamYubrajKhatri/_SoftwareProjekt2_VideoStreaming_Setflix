@@ -43,12 +43,12 @@ connectDB();//function called for a database connection
 app.use(express.json());// will allow us to use req.body ..for eg i use postman to give the data entry in json format.
 app.use(cookieParser());
 //we created a variable name authRoutes for the files and imported it above so it goes to specific destination
-app.use("/auth", authRoute);
-app.use("/movie",protectRoute,movieRoutes);
-app.use("/tv",protectRoute,tvRoutes);
-app.use("/search",protectRoute,searchRoutes);
+app.use("/api/auth", authRoute);
+app.use("/api/movie",protectRoute,movieRoutes);
+app.use("/api/tv",protectRoute,tvRoutes);
+app.use("/api/search",protectRoute,searchRoutes);
 
-app.use("/admin", adminRoute);
+app.use("/api/admin", adminRoute);
 
 
 /*

@@ -12,6 +12,7 @@ router.post("/login",Login);
 router.post("/logout",protectRoute,Logout);
 router.post("/forgot-password",forgotPassword);
 router.post("/reset-password", resetPassword);
+router.get("/me",protectRoute,(req,res)=>{res.status(200).json({success:true,user:req.user})});
 
 
 
