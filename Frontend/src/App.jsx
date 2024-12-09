@@ -8,13 +8,21 @@ import Signup from './components/Signup'
 import { Toaster } from 'react-hot-toast';
 import ResetPassword from './components/Resetpassword'
 import ForgetPassword from './components/Forgetpassword'
+import Favourites from './favourite/Favourites'
+// Import the FavoriteProvider
+import { FavoriteProvider } from './components/FavoriteContex'
+import Videoplayer from './Videoplayer/Videoplayer'
 
 
 
 function App() {
   return (
     <>
-    
+    {/* Wrap everything in the FavoriteProvider */}
+    {/* The FavoriteProvider wraps the entire application so that components like Movies and Favourites can access the global favorite list.*/} 
+
+
+    <FavoriteProvider>
     <Routes>
       <Route path='/' element={<Home/>}/>
       <Route path='/movies' element={<Movies/>}/>
@@ -22,8 +30,12 @@ function App() {
       <Route path='/forget-password' element={<ForgetPassword/>}/>
       <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path='/reset-password' element={<ResetPassword/>}/>
+      <Route path='/favourites' element={<Favourites/>}/>
+      <Route path='/video-player' element={<Videoplayer/>}/>
       
     </Routes>
+
+    </FavoriteProvider>
     <Toaster/>
     </>
   )

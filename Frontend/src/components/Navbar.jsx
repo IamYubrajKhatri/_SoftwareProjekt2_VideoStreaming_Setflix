@@ -2,37 +2,33 @@ import React, { useEffect } from 'react'
 import { Heart } from 'lucide-react';
 import { useState } from 'react';
 import Login from './Login';
+import Movie from './Movie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Navigate } from 'react-router-dom';
 
 
 
 function Navbar() {
 
-    const[sticky,setSticky]= useState(false);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
+  const[sticky,setSticky]= useState(false);
+     //sticky navbar effect
+     useEffect(()=>{
+      const handleScroll=()=>{
+          if(window.scrollY>0){
+              setSticky(true);}
+          else{
+              setSticky(false);}
+      }
+      window.addEventListener('scroll',handleScroll);
+  return()=>{
+      window.addEventListener('scroll',handleScroll);
+  }
+  },[])
 
-    const [user, setUser] = useState(null); // State to track logged-in user
-
-    //sticky navbar effect
-    useEffect(()=>{
-        const handleScroll=()=>{
-            if(window.scrollY>0){
-                setSticky(true);
-            }
-            else{
-                setSticky(false);
-            }
-        }
-        window.addEventListener('scroll',handleScroll);
-    return()=>{
-        window.addEventListener('scroll',handleScroll);
-    }
-    },[])
-
+const [user, setUser] = useState(null); // State to track logged-in user
     // Check login state when component mounts
   useEffect(() => {
     const checkLoginState = async () => {
@@ -48,6 +44,7 @@ function Navbar() {
     checkLoginState();
   }, []);
 
+  
  // Handle logout button click
  const handleLogout = async () => {
   try {
@@ -59,23 +56,39 @@ function Navbar() {
     console.error("Logout failed:", err);
   }
 };
+
+
+
+
+
+// Restrict access for logged-out users
+const handleRestrictedAccess = (path) => {
+  if (user) {
+    navigate(path);
+  } else {
+    toast.error("Please login to access this feature!");
+    document.getElementById("my_modal_3").showModal(); // Open login modal
+  }
+};
     
-    
+    //nav item we use for mobile and  all type of screen so we create a object
     const navItems=(<>
     <li><a href='/'>Home</a></li>
-    <li><a href='/movies'>Movies</a></li>
-    <li><a>Series</a></li>
+    <li><a onClick={() => handleRestrictedAccess("/movies")}>Movies</a></li>
+    <li><a onClick={() => handleRestrictedAccess("/series")}>Series</a></li>
     </>)
   
   const heartIcon = (<>
     <div className="">
-      <button className="btn btn-error">
+      <button className="btn btn-error"  onClick={() => handleRestrictedAccess("/favourites")} >
         <Heart size={20} color="white" />
       </button>
       </div>
       </> );
 
       
+
+
   return (
     <><div className={`max-w-screen-2xl container mx-auto md:px-20 px-4 fixed top-0 left-0 right-0 z-50 ${sticky? "sticky-navbar shadow-md bg-base-200 duration-200 transition-all ease-in-out":""}`}>
     <div className="navbar ">

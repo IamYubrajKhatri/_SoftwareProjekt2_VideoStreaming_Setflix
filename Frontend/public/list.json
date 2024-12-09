@@ -4,15 +4,16 @@
         "name":"Titanic",
         "image":"https://saarlouis.my-movie-world.de/images/Breite_235px_RGB/p_19228.jpg",
         "description":"Titanic is a 1997 American epic romantic disaster film directed, written, co-produced and co-edited by James Cameron. ",
-        "price":"2$"
-
+        "price":"Buy",
+        "videoUrl":"myVideo.mp4"
     },
     {
         "id":2,
         "name":"Titanic2",
         "image":"https://saarlouis.my-movie-world.de/images/Breite_235px_RGB/p_19228.jpg",
         "description":"Titanic is a 1997 American epic romantic disaster film directed, written, co-produced and co-edited by James Cameron. ",
-        "price":"Free"
+        "price":"Buy",
+        "videoUrl": "/videos/inception.mp4"
 
     },
     {
@@ -20,7 +21,8 @@
         "name":"Titanic3",
         "image":"https://saarlouis.my-movie-world.de/images/Breite_235px_RGB/p_19228.jpg",
         "description":"Titanic is a 1997 American epic romantic disaster film directed, written, co-produced and co-edited by James Cameron. ",
-        "price":"Free"
+        "price":"Buy",
+        "videoUrl":"https://www.youtube.com/watch?v=6stlCkUDG_s&list=PL4Gr5tOAPttLOY9IrWVjJlv4CtkYI5cI_&ab_channel=FreeHDvideos-nocopyright"
 
     },
     {
@@ -28,8 +30,8 @@
         "name":"Titanic4",
         "image":"https://saarlouis.my-movie-world.de/images/Breite_235px_RGB/p_19228.jpg",
         "description":"Titanic is a 1997 American epic romantic disaster film directed, written, co-produced and co-edited by James Cameron. ",
-        "price":"Free"
-        
+        "price":"Free",
+        "videoUrl":"https://www.youtube.com/watch?v=6stlCkUDG_s&list=PL4Gr5tOAPttLOY9IrWVjJlv4CtkYI5cI_&ab_channel=FreeHDvideos-nocopyright"
 
     },
     {
@@ -37,7 +39,8 @@
         "name":"Titanic5",
         "image":"https://saarlouis.my-movie-world.de/images/Breite_235px_RGB/p_19228.jpg",
         "description":"Titanic is a 1997 American epic romantic disaster film directed, written, co-produced and co-edited by James Cameron. ",
-        "price":"Free"
+        "price":"Free",
+        "videoUrl":"https://www.youtube.com/watch?v=6stlCkUDG_s&list=PL4Gr5tOAPttLOY9IrWVjJlv4CtkYI5cI_&ab_channel=FreeHDvideos-nocopyright"
 
     },
     {
@@ -45,7 +48,8 @@
         "name":"Titanic6",
         "image":"https://saarlouis.my-movie-world.de/images/Breite_235px_RGB/p_19228.jpg",
         "description":"Titanic is a 1997 American epic romantic disaster film directed, written, co-produced and co-edited by James Cameron. ",
-        "price":"Free"
+        "price":"Free",
+        "videoUrl":"https://www.youtube.com/watch?v=6stlCkUDG_s&list=PL4Gr5tOAPttLOY9IrWVjJlv4CtkYI5cI_&ab_channel=FreeHDvideos-nocopyright"
 
     },
     {
@@ -53,7 +57,8 @@
         "name":"Titanic7",
         "image":"https://saarlouis.my-movie-world.de/images/Breite_235px_RGB/p_19228.jpg",
         "description":"Titanic is a 1997 American epic romantic disaster film directed, written, co-produced and co-edited by James Cameron. ",
-        "price":"Free"
+        "price":"Free",
+        "videoUrl":"https://www.youtube.com/watch?v=6stlCkUDG_s&list=PL4Gr5tOAPttLOY9IrWVjJlv4CtkYI5cI_&ab_channel=FreeHDvideos-nocopyright"
 
     },
     {
@@ -61,7 +66,8 @@
         "name":"Titanic8",
         "image":"https://saarlouis.my-movie-world.de/images/Breite_235px_RGB/p_19228.jpg",
         "description":"Titanic is a 1997 American epic romantic disaster film directed, written, co-produced and co-edited by James Cameron. ",
-        "price":"Free"
+        "price":"Free",
+        "videoUrl":""
 
     }
 
