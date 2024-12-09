@@ -10,6 +10,7 @@ import authRoute from "./route/auth.route.js";
 import movieRoutes from "./route/movie.route.js"
 import tvRoutes from "./route/tv.route.js"
 import searchRoutes from "./route/search.route.js"
+import moviesRoute from "./route/movie1.router.js"
 
 import adminRoute from "./route/admin.route.js"
 
@@ -47,7 +48,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/movie",protectRoute,movieRoutes);
 app.use("/api/tv",protectRoute,tvRoutes);
 app.use("/api/search",protectRoute,searchRoutes);
-
+app.use("/api/movies",protectRoute,moviesRoute)
 app.use("/api/admin", adminRoute);
 
 
