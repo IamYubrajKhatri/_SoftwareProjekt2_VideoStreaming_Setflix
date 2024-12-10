@@ -4,7 +4,6 @@ import useAuthCheck from './AuthCheck';
 import Cards from './Cards';
 import { useNavigate,useParams } from 'react-router-dom';
 import axios from 'axios';
-//import { useFavorite } from './FavoriteContex';
 
 function Favourite() {
   const { userId } = useParams(); // Extract the user ID from the URL

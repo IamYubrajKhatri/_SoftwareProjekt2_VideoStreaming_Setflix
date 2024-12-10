@@ -10,5 +10,5 @@ router.put('/:id', updateMovie); // Update a movie
 router.delete('/:id', deleteMovie); // Delete a movie
 router.post('/favorites',addMovieToFavorite)//add movie to favourite
 router.get('/favorites/:userId',getUserFavorite)//show all favourite
-router.delete('/favorites',deleteMovieFromUserFavorite)//delete a movie fromfavourite
+router.delete('/favorites/:id',deleteMovieFromUserFavorite)//delete a movie fromfavourite
 export default router;

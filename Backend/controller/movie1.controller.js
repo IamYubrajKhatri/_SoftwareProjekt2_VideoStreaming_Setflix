@@ -132,9 +132,9 @@ export  async function updateMovie(req, res) {
       }
   
       // Remove movie from favorites
-      user.favorites = user.favorites.filter(fav => fav.toString() !== movieId);
+      user.favorite = user.favorite.filter(fav => fav.toString() !== movieId);
       await user.save();
-      return res.status(200).json({ favorites: user.favorites });
+      return res.status(200).json({ favorite: user.favorite,message:'Movie has been removed' });
     } catch (error) {
       return res.status(500).json({ message: 'Error removing movie from favorites', error: error.message });
     }
