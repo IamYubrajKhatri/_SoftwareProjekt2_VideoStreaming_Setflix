@@ -23,12 +23,12 @@ export const FavoriteProvider = ({ children }) => {
   // Add or remove a movie from the favorites list
   const toggleFavorite = (movie) => {
     setFavorites((prevFavorites) => {
-      const isFavorite = prevFavorites.find((item) => item.id === movie.id);
+      const isFavorite = prevFavorites.find((item) => item._id === movie._id);
       let updatedFavorites;
 
       if (isFavorite) {
         // Remove from favorites
-        updatedFavorites = prevFavorites.filter((item) => item.id !== movie.id);
+        updatedFavorites = prevFavorites.filter((item) => item._id !== movie._id);
       } else {
         // Add to favorites
          updatedFavorites=[...prevFavorites, movie];

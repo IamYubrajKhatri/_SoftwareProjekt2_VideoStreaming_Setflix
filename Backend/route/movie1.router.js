@@ -8,7 +8,7 @@ router.get('/:id',getMovieById); // Fetch a specific movie by ID
 router.post('/', addMovie); // Add a new movie
 router.put('/:id', updateMovie); // Update a movie
 router.delete('/:id', deleteMovie); // Delete a movie
-router.post('/:userId/favorites',addMovieToFavorite)//add movie to favourite
-router.get('/:userId/favorites',getUserFavorite)//show all favourite
-router.delete('/:userId/favorites',deleteMovieFromUserFavorite)//delete a movie fromfavourite
+router.post('/favorites',addMovieToFavorite)//add movie to favourite
+router.get('/favorites',getUserFavorite)//show all favourite
+router.delete('/favorites',deleteMovieFromUserFavorite)//delete a movie fromfavourite
 export default router;

@@ -34,7 +34,7 @@ function App() {
       <Route path='/forget-password' element={<ForgetPassword/>}/>
       <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path='/reset-password' element={<ResetPassword/>}/>
-      <Route path='/favourites' element={<Favourites userId={userId}/>}/>
+      <Route path='/favourites' element={<Favourites/>}/>
       <Route path='/video-player/:id' element={<Videoplayer/>}/>
       
     </Routes>

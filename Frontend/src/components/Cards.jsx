@@ -2,13 +2,45 @@ import React from 'react'
 import { Heart } from 'lucide-react';
 import { useFavorite } from "./FavoriteContex";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useState } from 'react';
 
 function Cards({ item }) {
 
 
   const { favorites, toggleFavorite } = useFavorite();
-  const isFavorite = favorites.some((fav) => fav.id === item.id);
+  const isFavorite = favorites.some((fav) => fav._id === item._id);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+ 
+
+  const handleFavoriteClick = async () => {
+    setIsLoading(true); // Start loading (disable UI actions during API call)
+    try {
+      // Make API call to add the movie to the user's favorites in the database
+      const response = await axios.post(
+        ' http://localhost:4001/api/movies/favorites', 
+        { movieId: item._id }, // Send movieId in the body
+        { withCredentials: true } // Ensure the cookie is sent with the request
+      );
+  
+      if (response.status === 200) {
+        console.log("Movie added to favorites");
+        // Update local favorites state if necessary
+        toggleFavorite(item); // Assuming toggleFavorite updates the context with the new favorite
+      } else {
+        console.error("Failed to add favorite");
+      }
+    } catch (error) {
+      console.error("Error saving favorite:", error);
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
+  };
+  
+
+
 
   const heartIcon = (<>
     <div className="">
@@ -32,7 +64,9 @@ function Cards({ item }) {
     <p>{item.description}</p>
     <div className="card-actions justify-between">
     <button className= "hover:text-black "aria-label="Add to favorites"
-              onClick={() => toggleFavorite(item)}>{ heartIcon }</button>
+             onClick={handleFavoriteClick}
+             disabled={isLoading}
+             >{ heartIcon }</button>
     <button className="btn btn-error text-white hover:text-black" 
      onClick={() =>  navigate(`/video-player/${item._id}`, { state: { movie: item } })}>
       Play</button>

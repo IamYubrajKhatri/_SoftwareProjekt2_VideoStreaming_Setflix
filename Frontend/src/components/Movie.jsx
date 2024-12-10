@@ -80,7 +80,7 @@ function Movie() {
     initialSlide: 0,
     responsive: [
       {
-        breakpoint: 1800,
+        breakpoint: 2000,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 3,

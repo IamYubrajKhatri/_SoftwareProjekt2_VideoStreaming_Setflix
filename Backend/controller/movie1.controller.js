@@ -67,21 +67,27 @@ export  async function updateMovie(req, res) {
   };
 
   export async function addMovieToFavorite(req,res){
-  const { userId } = req.params;
+ 
     //data comes from url,used to capture a dynamic segment in url like _id
   const { movieId } = req.body;
   //data comes from response of a body,uded to send data via HTTP method
   try {
+    const userId = req.user._id || req.params.userId; 
     const user = await User.findById(req.user._id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
+    // Ensure that user.favorite is initialized as an array if not already
+    if (!user.favorite) {
+      user.favorite = [];
+    }
+
     //user.favourite is a array,include(movieId) checks  if movieId already exists in the array,!means no ---if there is no movie id in the array 
     if (!user.favorite.includes(movieId)) {
-      user.favorites.push(movieId); // Add movieId to the favorites array
+      user.favorite.push(movieId); // Add movieId to the favorites array
       await user.save();
     }
 
-    res.status(200).json({ message: 'Favorite added successfully', favorite: user.favorites });
+    res.status(200).json({ message: 'Favorite added successfully', favorite: user.favorite });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Failed to add favorite' });
@@ -104,9 +110,16 @@ export  async function updateMovie(req, res) {
     }
   }
   export async function deleteMovieFromUserFavorite(req,res){
-    try {
-      const { userId } = req.params;
+    const userId = req.user._id;
       const { movieId } = req.body;
+
+      if (!mongoose.Types.ObjectId.isValid(movieId)) {
+        return res.status(400).json({ message: 'Invalid movie ID' });
+      }
+    
+
+    try {
+      
   
       const user = await User.findById(userId);
       if (!user) {
