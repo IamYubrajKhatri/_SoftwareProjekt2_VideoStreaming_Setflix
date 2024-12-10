@@ -1,6 +1,6 @@
 import User from "../model/user.model.js"
 
-
+import mongoose from 'mongoose';
 import Movie from "../model/movie.model.js";
 
 // Get all movies
@@ -96,19 +96,24 @@ export  async function updateMovie(req, res) {
   }
 
   export async function getUserFavorite(req,res){
+    const userId = req.user || req.params.userId; 
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
+  }
     try {
-      const { userId } = req.params;
   
-      const user = await User.findById(userId).populate('favorites'); // Populate movie details
+      const user = await User.findById(userId).populate('favorite'); // Populate movie details
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
   
-      res.status(200).json({ favorites: user.favorites });
+      res.status(200).json({ favorites: user.favorite });
     } catch (error) {
       return res.status(500).json({ message: 'Error retrieving favorites', error: error.message });
     }
   }
+
+
   export async function deleteMovieFromUserFavorite(req,res){
     const userId = req.user._id;
       const { movieId } = req.body;

@@ -34,10 +34,7 @@ const userSchema = mongoose.Schema({
         type: Array,
         default: []
     },
-    favorite:{
-        type: Array,
-        default: []
-    },
+    favorite: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }],
     isAdmin:{
         type: Boolean,
         default: false,//default is a regular user

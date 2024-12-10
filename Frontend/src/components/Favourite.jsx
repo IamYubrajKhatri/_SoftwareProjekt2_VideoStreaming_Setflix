@@ -1,20 +1,46 @@
 import React from 'react'
+import { useState,useEffect } from 'react';
 import useAuthCheck from './AuthCheck';
 import Cards from './Cards';
-import { useFavorite } from './FavoriteContex';
+import { useNavigate,useParams } from 'react-router-dom';
+import axios from 'axios';
+//import { useFavorite } from './FavoriteContex';
 
 function Favourite() {
+  const { userId } = useParams(); // Extract the user ID from the URL
      useAuthCheck();
+  const [favorites, setFavorites] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-     const { favorites } = useFavorite();
 
-  if (favorites.length === 0) {
-    return (
-      <div className="text-center mt-20">
-        <h2>Your favorites list is empty.</h2>
-      </div>
-    );
+    
+
+  useEffect(() => {
+    // Fetch the user's favorite movies when the component loads
+    const fetchFavorites = async () => {
+      try {
+        const response = await axios.get('http://localhost:4001/api/movies/favorites/{:userId}', {
+          withCredentials: true, // Send the JWT cookie
+        });
+
+        if (response.status === 200) {
+          setFavorites(response.data.favorites); // Set the fetched favorites in state
+        }
+      } catch (error) {
+        console.error('Error fetching favorites:', error);
+      } finally {
+        setLoading(false); // Stop loading
+      }
+    };
+
+    fetchFavorites();
+  }, []);
+
+  if (loading) {
+    return <p>Loading your favorite movies...</p>;
   }
+
      
   return (
     <>

@@ -4,6 +4,7 @@ import { useFavorite } from "./FavoriteContex";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 function Cards({ item }) {
 
@@ -27,6 +28,7 @@ function Cards({ item }) {
   
       if (response.status === 200) {
         console.log("Movie added to favorites");
+        toast.success('Movie added in Favourite Successfull!');
         // Update local favorites state if necessary
         toggleFavorite(item); // Assuming toggleFavorite updates the context with the new favorite
       } else {

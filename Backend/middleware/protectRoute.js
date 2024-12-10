@@ -27,7 +27,7 @@ export const protectRoute = async(req,res,next) => {
             return res.status(404).json({success: false,message:"User not found"})
          }
 
-         //req.user = user the user data was attached to req.user,token was verified,now it can send the response to all the router
+         //req.user = user the user data was attached to req.user,token was verified,now it can send the response to all the router it is decoded
          req.user = user;
 
          //then it go to next or next route like movie,tv
