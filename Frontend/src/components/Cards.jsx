@@ -16,7 +16,7 @@ function Cards({ item }) {
       if (isFavorite) {
         // If already a favorite, remove from favorites
         const response = await axios.delete(
-          `http://localhost:4001/api/movies/favorites/${item._id}`, // Use backticks
+          `http://localhost:4001/api/movies/favorites/${item._id}`, // Use backticks for dynamic value
           {
             data: { movieId: item._id }, // Send movieId in the body
             withCredentials: true, // Send JWT with request
