@@ -1,16 +1,54 @@
 import React from 'react'
 import Cards from './Cards'
-import list from '../../public/list.json';
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 
 import useAuthCheck from './AuthCheck';
+import axios from 'axios';
+import { useState,useEffect } from 'react';
 
 
 function Movie() {
   const isAuthenticated = useAuthCheck(); // Check if the user is authenticated
+  
+
+  // State for movies fetched from the backend
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch movies from the backend
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const response = await axios.get("http://localhost:4001/api/movies/"); 
+        setMovies(response.data); // Assuming the API returns an array of all movies
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching movies:", err);
+        setError("Failed to fetch movies");
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, []); // Empty dependency array ensures it runs once on component mount
+
+
+// Handle delete request
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4001/api/movies/${id}`); // Backend endpoint for deletion
+      setMovies((prevMovies) => prevMovies.filter((movie) => movie._id !== id)); // Update state
+    } catch (err) {
+      console.error("Error deleting movie:", err);
+      setError("Failed to delete movie");
+    }
+  };
+
+
   // If the user is not authenticated, return a message or a redirect.
   if (isAuthenticated === false) {
     return (
@@ -27,8 +65,11 @@ function Movie() {
       </div>
     );
   }
-  const filterData=list.filter((data)=> data.price === "Free");
-  const filterDataB=list.filter((data)=> data.price === "Buy");
+
+
+// Filter movies based on price
+  const filterData=movies.filter((data)=> data.price === "Free");
+  const filterDataB=movies.filter((data)=> data.price === "Buy");
 
   var settings = {
     dots: true,
@@ -38,6 +79,16 @@ function Movie() {
     slidesToScroll: 3,
     initialSlide: 0,
     responsive: [
+      {
+        breakpoint: 1800,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true
+        }
+      },
+
       {
         breakpoint: 1024,
         settings: {
@@ -73,7 +124,7 @@ function Movie() {
       <div className=''>
       <Slider {...settings}>
       {filterDataB.map((item)=>(
-          <Cards item={item} key={item.id}/> 
+          <Cards item={item} key={item._id} onDelete={handleDelete}/> // Use _id as key if MongoDB is used
         ))}
         </Slider>
       </div>
@@ -85,7 +136,7 @@ function Movie() {
       <div className=''>
       <Slider {...settings}>
       {filterData.map((item)=>(
-          <Cards item={item} key={item.id}/> 
+          <Cards item={item} key={item._id} onDelete={handleDelete}/> 
         ))}
         </Slider>
       </div>
@@ -99,3 +150,4 @@ function Movie() {
 }
 
 export default Movie
+//this page takes all the movies from backend and bring it together with cards and sliders.

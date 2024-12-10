@@ -13,9 +13,13 @@ import Favourites from './favourite/Favourites'
 import { FavoriteProvider } from './components/FavoriteContex'
 import Videoplayer from './Videoplayer/Videoplayer'
 
-
+import { useParams } from 'react-router-dom';
 
 function App() {
+
+  const { userId } = useParams(); // Use useParams to get userId from URL
+
+  console.log(userId); // This should now work
   return (
     <>
     {/* Wrap everything in the FavoriteProvider */}
@@ -30,8 +34,8 @@ function App() {
       <Route path='/forget-password' element={<ForgetPassword/>}/>
       <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path='/reset-password' element={<ResetPassword/>}/>
-      <Route path='/favourites' element={<Favourites/>}/>
-      <Route path='/video-player' element={<Videoplayer/>}/>
+      <Route path='/favourites' element={<Favourites userId={userId}/>}/>
+      <Route path='/video-player/:id' element={<Videoplayer/>}/>
       
     </Routes>
 

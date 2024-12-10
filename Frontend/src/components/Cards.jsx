@@ -34,7 +34,7 @@ function Cards({ item }) {
     <button className= "hover:text-black "aria-label="Add to favorites"
               onClick={() => toggleFavorite(item)}>{ heartIcon }</button>
     <button className="btn btn-error text-white hover:text-black" 
-     onClick={() =>  navigate("/video-player", { state: { movie: item } })}>
+     onClick={() =>  navigate(`/video-player/${item._id}`, { state: { movie: item } })}>
       Play</button>
     </div>
     
@@ -47,7 +47,3 @@ function Cards({ item }) {
 }
 
 export default Cards;
-
-
-
-

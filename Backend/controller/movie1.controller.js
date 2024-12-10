@@ -65,3 +65,60 @@ export  async function updateMovie(req, res) {
       res.status(400).json({ error: error.message });
     }
   };
+
+  export async function addMovieToFavorite(req,res){
+  const { userId } = req.params;
+    //data comes from url,used to capture a dynamic segment in url like _id
+  const { movieId } = req.body;
+  //data comes from response of a body,uded to send data via HTTP method
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    //user.favourite is a array,include(movieId) checks  if movieId already exists in the array,!means no ---if there is no movie id in the array 
+    if (!user.favorite.includes(movieId)) {
+      user.favorites.push(movieId); // Add movieId to the favorites array
+      await user.save();
+    }
+
+    res.status(200).json({ message: 'Favorite added successfully', favorite: user.favorites });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to add favorite' });
+  }
+
+  }
+
+  export async function getUserFavorite(req,res){
+    try {
+      const { userId } = req.params;
+  
+      const user = await User.findById(userId).populate('favorites'); // Populate movie details
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      res.status(200).json({ favorites: user.favorites });
+    } catch (error) {
+      return res.status(500).json({ message: 'Error retrieving favorites', error: error.message });
+    }
+  }
+  export async function deleteMovieFromUserFavorite(req,res){
+    try {
+      const { userId } = req.params;
+      const { movieId } = req.body;
+  
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Remove movie from favorites
+      user.favorites = user.favorites.filter(fav => fav.toString() !== movieId);
+      await user.save();
+      return res.status(200).json({ favorites: user.favorites });
+    } catch (error) {
+      return res.status(500).json({ message: 'Error removing movie from favorites', error: error.message });
+    }
+  }
+
