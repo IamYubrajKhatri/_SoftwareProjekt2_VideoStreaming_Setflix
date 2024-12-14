@@ -12,6 +12,10 @@ import Favourites from './favourite/Favourites'
 // Import the FavoriteProvider
 
 import Videoplayer from './Videoplayer/Videoplayer'
+import AdminDashboards from './adminDashboard/AdminDashboards'
+
+
+
 
 
 
@@ -30,6 +34,7 @@ function App() {
       <Route path='/reset-password' element={<ResetPassword/>}/>
       <Route path='/favourites' element={<Favourites/>}/>
       <Route path='/video-player/:id' element={<Videoplayer/>}/>
+      <Route path='/admin' element={< AdminDashboards/>}/>
       
     </Routes>
 

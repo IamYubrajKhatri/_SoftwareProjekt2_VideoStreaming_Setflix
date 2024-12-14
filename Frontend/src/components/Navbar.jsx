@@ -6,6 +6,7 @@ import Movie from './Movie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate,Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 
@@ -75,7 +76,7 @@ const handleRestrictedAccess = (path) => {
     const navItems=(<>
     <li><a href='/'>Home</a></li>
     <li><a onClick={() => handleRestrictedAccess("/movies")}>Movies</a></li>
-    <li><a onClick={() => handleRestrictedAccess("/series")}>Series</a></li>
+    <li><a href= "/admin"className='btn' onClick={()=>document.getElementById("my_modal_3").showModal()}>Admin</a></li>
     </>)
   
   const heartIcon = (<>
