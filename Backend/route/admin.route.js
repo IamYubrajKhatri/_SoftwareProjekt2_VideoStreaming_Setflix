@@ -1,5 +1,5 @@
 import express from "express";
-import {adminLogin,adminSignup,adminLogout,createUser, deleteUser, uploadVideo,deleteVideo, toggleVideoVisibility, getAllVideos} from "../controller/admin.controller.js";
+import {adminLogin,adminSignup,adminLogout,createUser, deleteUser, uploadVideo,deleteVideo, toggleVideoVisibility, getAllVideos, getAllUser} from "../controller/admin.controller.js";
 import { protectAdminRoute, protectAdminRouteCreateUser} from "../middleware/protectAdminRoute.js";
 const router = express.Router();
 
@@ -14,4 +14,5 @@ router.patch("/visibility/:videoId",protectAdminRoute,toggleVideoVisibility)
 router.get("/getAllVideos",protectAdminRoute,getAllVideos)
 
 
+router.get("/getAllUsers",getAllUser)
 export default router ;

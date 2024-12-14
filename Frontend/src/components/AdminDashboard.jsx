@@ -1,15 +1,43 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import CardsAdmin from './CardsAdmin';
+import CardsAdminUser from './CardsAdminUser';
 
 function AdminDashboard() {
-    const [title, setTitle] = useState('');
+  const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [video, setVideo] = useState(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [movies, setMovies] = useState([]); // Movie list
+  const [users, setUsers] = useState([]);
+
+  // Fetch movies and users from the backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const movieResponse = await axios.get('http://localhost:4001/api/movies/');
+        setMovies(movieResponse.data);
+
+        const userResponse = await axios.get('http://localhost:4001/api/admin/getAllUsers');
+         // Check if the response contains the 'users' array
+      if (userResponse.data.success && Array.isArray(userResponse.data.users)) {
+        setUsers(userResponse.data.users); // Extract the users array
+      } else {
+        console.error('Unexpected API response:', userResponse.data);
+        toast.error('Unexpected response format.');
+        setUsers([]); // Fallback to an empty array
+      }
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        toast.error('Failed to fetch data. Please try again.');
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Handle file input change
   const handleFileChange = (e) => {
@@ -32,18 +60,15 @@ function AdminDashboard() {
 
     try {
       const response = await axios.post('/api/videos/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       toast.success('Video uploaded successfully!');
-      console.log(response.data);
+      setMovies((prev) => [...prev, response.data]); // Update movie list
 
       // Clear the form
       setTitle('');
       setDescription('');
       setVideo(null);
-      document.getElementById('video').value = ''; // Clear file input
     } catch (error) {
       console.error(error);
       toast.error('Failed to upload video. Please try again.');
@@ -53,9 +78,9 @@ function AdminDashboard() {
   // Delete video
   const handleDeleteVideo = async (videoId) => {
     try {
-      const response = await axios.delete(`/api/videos/${videoId}`);
+      await axios.delete(`/api/videos/${videoId}`);
       toast.success('Video deleted successfully!');
-      console.log(response.data);
+      setMovies((prev) => prev.filter((movie) => movie._id !== videoId)); // Update UI
     } catch (error) {
       console.error(error);
       toast.error('Failed to delete video. Please try again.');
@@ -74,7 +99,7 @@ function AdminDashboard() {
     try {
       const response = await axios.post('/api/users/add', { username, email });
       toast.success('User added successfully!');
-      console.log(response.data);
+      setUsers((prev) => [...prev, response.data]); // Update user list
 
       // Clear the form
       setUsername('');
@@ -88,9 +113,9 @@ function AdminDashboard() {
   // Delete user
   const handleDeleteUser = async (userId) => {
     try {
-      const response = await axios.delete(`/api/users/${userId}`);
+      await axios.delete(`/api/users/${userId}`);
       toast.success('User deleted successfully!');
-      console.log(response.data);
+      setUsers((prev) => prev.filter((user) => user._id !== userId)); // Update UI
     } catch (error) {
       console.error(error);
       toast.error('Failed to delete user. Please try again.');
@@ -98,9 +123,9 @@ function AdminDashboard() {
   };
 
   return (
-    <>
-      <div className="flex flex-col items-center justify-center min-h-screen space-y-8">
-        {/* Upload Video Section */}
+    <div className="flex-col max-w-screen-2xl container mx-auto md:px-20 px-4 bg-white">
+      {/* Upload Video Section */}
+      <div className="flex flex-col items-center justify-center mt-20 space-y-8">
         <div>
           <button onClick={() => document.getElementById('video_modal').showModal()} className="btn btn-primary">
             Upload Video
@@ -227,13 +252,34 @@ function AdminDashboard() {
           </dialog>
         </div>
       </div>
-    </>
+
+      {/* Video Section */}
+      <div>
+        <h2 className="my-5 text-center text-2xl font-bold">Videos</h2>
+        <hr />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+          {movies.map((item) => (
+            <CardsAdmin item={item} key={item._id} onDelete={handleDeleteVideo} />
+          ))}
+        </div>
+      </div>
+
+      {/* User Section */}
+      <div>
+        <h2 className="my-5 text-center text-2xl font-bold">Users</h2>
+        <hr />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+        {users.length === 0 ? (
+        <p>No users available.</p>
+      ) : (
+        users.map((user) => (
+          <CardsAdminUser item={user} key={user._id} onDelete={handleDeleteUser} />
+        ))
+      )}
+        </div>
+      </div>
+    </div>
   );
-};
-  
+}
 
-export default AdminDashboard
-
-
-
-
+export default AdminDashboard;

@@ -3,14 +3,36 @@ import React from 'react'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
-
-import list from '../../public/list.json';
-
-import Cards from "./Cards"
+import { useState,useEffect } from 'react';
+import axios from 'axios';
 import CardsViewOnly from './CardsViewOnly';
 function FreeVideo() {
 
-    const filterData=list.filter((data)=> data.price === "Free");
+    const [movies, setMovies] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+     // Fetch movies from the backend
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const response = await axios.get("http://localhost:4001/api/movies/"); 
+        setMovies(response.data); // Assuming the API returns an array of all movies
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching movies:", err);
+        setError("Failed to fetch movies");
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, []); // Empty dependency array ensures it runs once on component mount
+
+  const filterData=movies.filter((data)=> data.price === "Free");
+
+
+   
 {/* All for sliders*/}
     var settings = {
       dots: true,
@@ -62,7 +84,7 @@ function FreeVideo() {
       <div>
       <Slider {...settings}>
         {filterData.map((item)=>(
-          <CardsViewOnly item={item} key={item.id}/> 
+          <CardsViewOnly item={item} key={item._id}/> 
         ))}
       </Slider>
       </div>
