@@ -6,6 +6,7 @@ import bcryptjs from "bcryptjs";
 //to send verification code
 import { SendVerificationCode, sendResetPasswordOtp,WelcomeEmail ,resetPasswordSuccessfullEmail} from "../middleware/Email.js"
 import { generateTokenAndSetCookie } from "../utils/generateToken.js"
+import { generateTokenAndSetCookieAdmin } from "../utils/generateToken.js";
 
 // export const signup=(req,res)=>{} an alternative to down one
 export async function signup(req,res){
@@ -46,13 +47,16 @@ export async function signup(req,res){
         //math floor round up to nearest one and math random a float number between 0 and 1
         const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
+         // Check if the user is an admin .This sets isAdmin to true for the specified emails, otherwise false.
+         const isAdmin = (email === "yubraj.khatri@mnd.thm.de" || email === "khatriyubraj1157@gmail.com");
 
         //we store a input of userdata here
         const createdNewUser = new User({
             username,
             email,
             password: hashedPassword,
-            verificationCode
+            verificationCode,
+            isAdmin
             })
 
             //the down code saves the data in database
@@ -97,54 +101,51 @@ export const VerifyEmail=async(req,res)=>{
 }
 
 //login
-export async function Login(req,res){
+export async function Login(req, res) {
     try {
-        //user input
-        const { email, password} = req.body
+        const { email, password } = req.body;
 
-
-        //the first one is database email and second is the user input
-        if(!email || !password){
-            return res.status(400).json({success: false, message: "All fields are required"});
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({ success: false, message: "All fields are required" });
         }
 
+        // Find user in the database
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(401).json({ success: false, message: "Invalid Credentials" });
+        }
 
-        const admin = await User.findOne({email,isAdmin:true})
-        if(admin){
-            return res.status(400).json({ success: false, message: 'Please login as Admin' });
-        }
-        const user = await User.findOne({email: email})
-        if(!user){
-            return res.status(404).json({success:false,message: "Invalid Credentials"});
-        }
+        // Check if the user's email is verified
         if (!user.isVerified) {
-            return res.status(401).json({ success: false, message: "Please verify your email to login" });
+            return res.status(403).json({ success: false, message: "Please verify your email to login" });
         }
 
-
-        //the first one is the user input in screen and second one is password stored in database
-        const isPasswordCorrect = await bcryptjs.compare(password,user.password);
-        if(!isPasswordCorrect){
-            return res.status(404).json({success:false,message: "Invalid Credentials"});
+        // Compare passwords
+        const isPasswordCorrect = await bcryptjs.compare(password, user.password);
+        if (!isPasswordCorrect) {
+            return res.status(401).json({ success: false, message: "Invalid Credentials" });
         }
 
+        // Check if the user is an admin
+        //if (user.isAdmin) {
+        //generateTokenAndSetCookieAdmin(user._id, res);
+        //return res.status(200).json({ success: true, message: "Login as admin successful" });
+        //}
+
+        // Mark user as logged in and save
         user.isLoggedin = true;
         await user.save();
 
-
-        
-
-        //json web token to start a session
-        generateTokenAndSetCookie(user._id,res);//_id is a user unique number stored in mongodb first line
-        res.status(200).json({success:true, message: "Login successfull",user})
-
-
-
+        // Generate token and start session
+        generateTokenAndSetCookie(user._id, res);
+        return res.status(200).json({ success: true, message: "Login successful", user });
     } catch (error) {
-        console.log("Error: " + error.message);
-        res.status(500).json({sucess:false,message: "Internal server error by login"})
+        console.error("Error during login:", error.message);
+        return res.status(500).json({ success: false, message: "Internal server error" });
     }
 }
+
 
 //logout
 export async function Logout(req,res) {

@@ -1,7 +1,7 @@
 import express from "express";
 //we import signup function from controller.js
 import { signup,VerifyEmail,Login ,Logout,forgotPassword,resetPassword } from "../controller/auth.controller.js";
-import { protectRoute } from "../middleware/protectRoute.js";
+import { protectRoute} from "../middleware/protectRoute.js";
 
 const router = express.Router();
 //the Router acts as a mini app that you can attach middelware and route handler to.

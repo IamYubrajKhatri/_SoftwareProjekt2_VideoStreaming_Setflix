@@ -4,8 +4,11 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import CardsAdmin from './CardsAdmin';
 import CardsAdminUser from './CardsAdminUser';
+import useAuthCheckAdmin from './useAuthCheckAdmin';
 
 function AdminDashboard() {
+  const isAdminAuthenticated = useAuthCheckAdmin(); // Check if the user is authenticated
+   
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [video, setVideo] = useState(null);
@@ -15,8 +18,11 @@ function AdminDashboard() {
   const [movies, setMovies] = useState([]); // Movie list
   const [users, setUsers] = useState([]);
 
+
   // Fetch movies and users from the backend
   useEffect(() => {
+    if (isAdminAuthenticated === null) return; // Don't run until the authentication state is available
+
     const fetchData = async () => {
       try {
         const movieResponse = await axios.get('http://localhost:4001/api/movies/');
@@ -38,7 +44,7 @@ function AdminDashboard() {
     };
 
     fetchData();
-  }, []);
+  }, [isAdminAuthenticated]);
 
   // Handle file input change
   const handleFileChange = (e) => {
@@ -138,6 +144,24 @@ const handleDeleteUser = async (userId) => {
   }
 };
   
+// Conditionally render based on the authentication state
+if (isAdminAuthenticated === false) {
+  return (
+    <div className="text-center mt-20">
+      <h2>You are not authorized. Please log in as admin to access this page.</h2>
+    </div>
+  );
+}
+
+// Display loading message when the authentication state is still loading
+if (isAdminAuthenticated === null) {
+  return (
+    <div className="text-center mt-20">
+      <h2>Loading...</h2>
+    </div>
+  );
+}
+
   
   
 
