@@ -8,6 +8,9 @@ import mongoose from "mongoose";
 import Movie from "../model/movie.model.js";
 
 import { uploadVideoToBlob } from "../middleware/azureBlobService.js";
+import { BlobServiceClient } from "@azure/storage-blob";
+const blobServiceClient = BlobServiceClient.fromConnectionString(Env_Vars.AZURE_BLOB_STORAGE);
+
 
 
 //admin signup
@@ -233,22 +236,71 @@ export async function uploadVideo(req,res){
         res.status(500).json({ success: false, message: "Internal server error during video upload" });
     }
 }
+
 export async function deleteVideo(req, res) {
     const { videoId } = req.params;
+    const { videoUrl } = req.body;  // URL or path to the video in Blob Storage
+
+    console.log('Request Body:', req.body);  // Log the body to check if videoUrl is there
+
+    // Ensure that the ID is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(videoId)) {
+        return res.status(400).json({ success: false, message: "Invalid video ID format" });
+    }
 
     try {
-        const video = await Video.findById(videoId);
-        if (!video) {
-            return res.status(404).json({ success: false, message: "Video not found" });
+        // 1. Check if the videoUrl is provided and delete from Azure Blob Storage
+        if (videoUrl) {
+            let blobName = videoUrl.split('/').pop();  // Get the blob name from the URL (last part)
+
+            console.log('Blob Name:', blobName);  // Check the extracted blob name
+
+            const containerName = 'videos';  // Replace with your actual container name
+            const containerClient = blobServiceClient.getContainerClient(containerName);
+            const blobClient = containerClient.getBlobClient(blobName);
+
+            // Delete the blob (video) from the container
+            const deleteResponse = await blobClient.deleteIfExists();
+            
+            if (deleteResponse.error) {
+                console.log(`Error deleting video from Azure Blob Storage: ${deleteResponse.error.message}`);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Failed to delete video from Azure Blob Storage.',
+                });
+            }
+
+            console.log(`Deleted video from Azure Blob Storage: ${blobName}`);
+        } else {
+            console.warn('No video URL provided, skipping Azure Blob deletion');
         }
 
-        await video.deleteOne();
-        res.status(200).json({ success: true, message: "Video deleted successfully" });
+        // 2. Delete the video record from the database
+        const deletedVideo = await Movie.findByIdAndDelete(videoId);
+
+        if (!deletedVideo) {
+            return res.status(404).json({
+                success: false,
+                message: 'Video not found.',
+            });
+        }
+
+        // Send success response
+        res.status(200).json({
+            success: true,
+            message: 'Video deleted successfully!',
+        });
     } catch (error) {
-        console.error("Error deleting video:", error.message);
-        res.status(500).json({ success: false, message: "Internal server error during video deletion" });
+        console.error('Error deleting video:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete video. Please try again.',
+        });
     }
-};
+}
+
+
+
 export async function toggleVideoVisibility(req,res) {
     const { videoId } = req.params;
     try {
