@@ -140,3 +140,28 @@ export  async function updateMovie(req, res) {
     }
   }
 
+  export const searchMovies = async (req, res) => {
+    try {
+        const { query } = req.query; // Extract the query parameter from the request
+
+        // Ensure the query parameter is provided
+        if (!query) {
+            return res.status(400).json({ error: "Query parameter is required" });
+        }
+
+        // Search logic: Look for movies where name or description matches the query
+        const results = await Movie.find({
+            $or: [
+                { name: { $regex: query, $options: "i" } }, // Case-insensitive search
+                { description: { $regex: query, $options: "i" } },
+            ],
+        });
+
+        // Respond with the search results
+        res.status(200).json({ results });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+

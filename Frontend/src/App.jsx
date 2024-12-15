@@ -13,6 +13,8 @@ import Favourites from './favourite/Favourites'
 
 import Videoplayer from './Videoplayer/Videoplayer'
 import AdminDashboards from './adminDashboard/AdminDashboards'
+import SearchResult from './SearchResults/SearchResult'
+
 
 
 
@@ -35,6 +37,7 @@ function App() {
       <Route path='/favourites' element={<Favourites/>}/>
       <Route path='/video-player/:id' element={<Videoplayer/>}/>
       <Route path='/admin' element={< AdminDashboards/>}/>
+      <Route path='/search-results' element={< SearchResult/>}/>
       
     </Routes>
 

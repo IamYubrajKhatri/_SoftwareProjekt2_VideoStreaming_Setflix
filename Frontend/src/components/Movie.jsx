@@ -121,6 +121,7 @@ function Movie() {
     <div className='max-w-screen-2xl container mx-auto md:px-20 px-4 bg-white'>
       <div>
       <h2 className='mt-20 text-center text-2xl font-bold '>Trending</h2>
+      <hr />
       <div className=''>
       <Slider {...settings}>
       {filterDataB.map((item)=>(
@@ -133,6 +134,7 @@ function Movie() {
       <br />
       <div>
       <h2 className=' text-center text-2xl font-bold '>Action</h2>
+      <hr />
       <div className=''>
       <Slider {...settings}>
       {filterData.map((item)=>(
