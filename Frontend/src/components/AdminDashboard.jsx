@@ -79,15 +79,23 @@ function AdminDashboard() {
   };
 
   // Delete video
-  const handleDeleteVideo = async (videoId) => {
+  const handleDeleteVideo = async (videoId,videoUrl) => {
+
+   
     try {
-      await axios.delete(`/api/videos/${videoId}`);
+      await axios.request({
+        method: 'DELETE',
+        url: `http://localhost:4001/api/admin/delete-video`,
+        data: { videoId, videoUrl }, // Pass both ID and URL in the request body
+      });
       toast.success('Video deleted successfully!');
       setMovies((prev) => prev.filter((movie) => movie._id !== videoId)); // Update UI
     } catch (error) {
       console.error(error);
       toast.error('Failed to delete video. Please try again.');
     }
+
+  
   };
 
   // Add user

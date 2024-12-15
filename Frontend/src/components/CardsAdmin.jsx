@@ -17,14 +17,7 @@ function CardsAdmin({ item, onDelete }) {
 
     // Function to handle deleting the video
   const handleDelete = async () => {
-    try {
-      await axios.delete(`http://localhost:4001/api/videos/${item._id}`);
-      toast.success('Video deleted successfully!');
-      onDelete(item._id); // Notify parent to refresh the list or update UI
-    } catch (error) {
-      console.error('Error deleting video:', error);
-      toast.error('Failed to delete video. Please try again.');
-    }
+   onDelete(item._id,item.videoUrl)
   };
 
 

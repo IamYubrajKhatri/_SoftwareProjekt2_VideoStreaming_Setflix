@@ -238,8 +238,8 @@ export async function uploadVideo(req,res){
 }
 
 export async function deleteVideo(req, res) {
-    const { videoId } = req.params;
-    const { videoUrl } = req.body;  // URL or path to the video in Blob Storage
+    //const { videoId } = req.params;
+    const {videoId, videoUrl } = req.body;  // URL or path to the video in Blob Storage
 
     console.log('Request Body:', req.body);  // Log the body to check if videoUrl is there
 

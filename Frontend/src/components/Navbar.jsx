@@ -76,7 +76,7 @@ const handleRestrictedAccess = (path) => {
     const navItems=(<>
     <li><a href='/'>Home</a></li>
     <li><a onClick={() => handleRestrictedAccess("/movies")}>Movies</a></li>
-    <li><a href= "/admin"className='btn' onClick={()=>document.getElementById("my_modal_3").showModal()}>Admin</a></li>
+
     </>)
   
   const heartIcon = (<>

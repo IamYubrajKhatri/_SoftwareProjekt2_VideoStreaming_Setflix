@@ -16,7 +16,7 @@ router.post("/login",adminLogin);
 router.post("/logout",protectAdminRoute,adminLogout);
 router.post("/create-user",createUser)
 router.delete("/delete-user/:userId",deleteUser)
-router.delete("/delete-video/:videoId",deleteVideo)
+router.delete("/delete-video/",deleteVideo)
 router.patch("/visibility/:videoId",protectAdminRoute,toggleVideoVisibility)
 router.get("/getAllVideos",protectAdminRoute,getAllVideos)
 
