@@ -6,8 +6,8 @@ const router = express.Router();
 router.post("/signup",adminSignup)
 router.post("/login",adminLogin);
 router.post("/logout",protectAdminRoute,adminLogout);
-router.post("/create-user",protectAdminRouteCreateUser,createUser)
-router.delete("/delete-user/:id",protectAdminRoute,deleteUser)
+router.post("/create-user",createUser)
+router.delete("/delete-user/:userId",deleteUser)
 router.post("/uploadVideo",protectAdminRoute,uploadVideo)
 router.delete("/deleteVideo/:videoId",protectAdminRoute,deleteVideo)
 router.patch("/visibility/:videoId",protectAdminRoute,toggleVideoVisibility)

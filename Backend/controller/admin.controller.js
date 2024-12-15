@@ -4,6 +4,7 @@ import Video from "../model/video.model.js";
 import { generateTokenAndSetCookieAdmin } from "../utils/generateToken.js";
 import { SendVerificationCode} from "../middleware/Email.js"
 import { Env_Vars } from "../config/env.Vars.js";
+import mongoose from "mongoose";
 //admin signup
 export async function adminSignup(req,res){
     const { username,email, password, secretKey } = req.body;
@@ -157,6 +158,7 @@ export async function createUser(req,res){
             email,
             password: hashedPassword,
             isVerified:true,
+            isAdmin:false,
         });
 
         await newUser.save();
@@ -168,23 +170,28 @@ export async function createUser(req,res){
     }
 }
 
-export async function deleteUser(req,res){
+
+export async function deleteUser(req, res) {
     try {
-        const { id } = req.params;
+        const { userId } = req.params;
+
+        // Ensure that the ID is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ success: false, message: "Invalid user ID format" });
+        }
 
         // Check if the user exists
-        const user = await User.findById(id);
+        const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found in database" });
         }
 
-        if(user.isAdmin===true){
-            return res.status(404).json({ success: false, message: "Admin User can not be deleted from database" });
+        if (user.isAdmin === true) {
+            return res.status(404).json({ success: false, message: "Admin User cannot be deleted" });
         }
 
         // Delete the user
         await user.deleteOne();
-
         res.status(200).json({ success: true, message: "User deleted successfully by admin" });
     } catch (error) {
         console.error("Error in deleteUser:", error.message);

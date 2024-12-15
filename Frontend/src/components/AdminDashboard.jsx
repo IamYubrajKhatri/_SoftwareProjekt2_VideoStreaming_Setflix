@@ -11,6 +11,7 @@ function AdminDashboard() {
   const [video, setVideo] = useState(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [password,setPassword]= useState('');
   const [movies, setMovies] = useState([]); // Movie list
   const [users, setUsers] = useState([]);
 
@@ -91,41 +92,51 @@ function AdminDashboard() {
   const handleAddUser = async (e) => {
     e.preventDefault();
 
-    if (!username || !email) {
+    if (!username || !email || !password) {
       toast.error('Please provide all user details.');
       return;
     }
 
     try {
-      const response = await axios.post('/api/users/add', { username, email });
+      const response = await axios.post('http://localhost:4001/api/admin/create-user', { username, email,password });
       toast.success('User added successfully!');
       setUsers((prev) => [...prev, response.data]); // Update user list
 
       // Clear the form
       setUsername('');
       setEmail('');
+      setPassword('');
     } catch (error) {
       console.error(error);
       toast.error('Failed to add user. Please try again.');
     }
   };
 
-  // Delete user
-  const handleDeleteUser = async (userId) => {
-    try {
-      await axios.delete(`/api/users/${userId}`);
+// Delete user from database
+const handleDeleteUser = async (userId) => {
+  try {
+    const response = await axios.delete(`http://localhost:4001/api/admin/delete-user/${userId}`);
+    if (response.data.success) {
       toast.success('User deleted successfully!');
-      setUsers((prev) => prev.filter((user) => user._id !== userId)); // Update UI
-    } catch (error) {
-      console.error(error);
-      toast.error('Failed to delete user. Please try again.');
+      setUsers((prev) => prev.filter((user) => user._id !== userId)); // Update user list
+    } else {
+      toast.error(response.data.message);
     }
-  };
+  } catch (error) {
+    console.error(error);
+    toast.error('Failed to delete user. Please try again.');
+  }
+};
+  
+  
+  
+
+  
 
   return (
     <div className="flex-col max-w-screen-2xl container mx-auto md:px-20 px-4 bg-white">
       {/* Upload Video Section */}
-      <div className="flex flex-col items-center justify-center mt-20 space-y-8">
+      <div className="flex  items-center justify-center flex-col mt-20 space-y-8">
         <div>
           <button onClick={() => document.getElementById('video_modal').showModal()} className="btn btn-primary">
             Upload Video
@@ -240,7 +251,24 @@ function AdminDashboard() {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
-                </div>
+                     </div>
+                  
+                     <div className="mt-4 space-y-2 py-1">
+                  <label htmlFor="password" className="block font-medium">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="Password"
+                    placeholder="Enter a password"
+                    className="w-full px-4 py-2 border rounded-md outline-none"
+                    value={password}
+                    onChange={(e) =>setPassword(e.target.value)}
+                    required
+                  />
+                  </div>
+
+             
 
                 <div className="flex justify-end mt-6">
                   <button type="submit" className="btn btn-success text-white hover:text-black">

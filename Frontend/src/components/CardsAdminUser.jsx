@@ -10,16 +10,9 @@ function CardsAdminUser({ item, onDelete }) {  // Destructure props here
   const imageUrl = `/${item.image}`;  // Assuming 'item.image' contains 'profile.avif'
 
 
-  // Function to handle deleting the user
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`http://localhost:4001/api/admin/${item._id}`);
-      toast.success('User deleted successfully!');
-      onDelete(item._id); // Notify parent to refresh the list or update UI
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      toast.error('Failed to delete user. Please try again.');
-    }
+  const handleDelete = () => {
+    // Call the parent's onDelete function passed via props
+    onDelete(item._id);
   };
 
   return (
