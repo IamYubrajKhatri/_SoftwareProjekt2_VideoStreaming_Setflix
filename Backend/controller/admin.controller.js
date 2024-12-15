@@ -5,6 +5,11 @@ import { generateTokenAndSetCookieAdmin } from "../utils/generateToken.js";
 import { SendVerificationCode} from "../middleware/Email.js"
 import { Env_Vars } from "../config/env.Vars.js";
 import mongoose from "mongoose";
+import Movie from "../model/movie.model.js";
+
+import { uploadVideoToBlob } from "../middleware/azureBlobService.js";
+
+
 //admin signup
 export async function adminSignup(req,res){
     const { username,email, password, secretKey } = req.body;
@@ -200,17 +205,26 @@ export async function deleteUser(req, res) {
 }
 
 export async function uploadVideo(req,res){
-    const { title, description, videoUrl } = req.body;
-    const adminId = req.user._id;
-    if (!title || !description || !videoUrl) {
+    const { title, description } = req.body;
+    const videoFile = req.file;
+
+    //const adminId = req.user._id;
+    if (!title || !description || !videoFile) {
         return res.status(400).json({ success: false, message: "All fields are required" });
     }
+
+    // Generate a unique video name
+    const videoName = title || `${Date.now()}_${videoFile.originalname}`;
+
+    // Upload the video to Azure Blob Storage and get the video URL
+    const videoUrl = await uploadVideoToBlob(videoFile.buffer, videoName);
+
     try {
-        const newVideo = new Video({
-            title,
-            description,
-            videoUrl,
-            uploadedBy: adminId,
+        const newVideo = new Movie({
+            name:videoName,
+            description:description,
+            videoUrl:videoUrl,
+           // uploadedBy: adminId,
         });
         await newVideo.save();
         res.status(201).json({ success: true, message: "Video uploaded successfully", video: newVideo });

@@ -13,6 +13,8 @@ export const Env_Vars = {
     NODE_ENV: process.env.NODE_ENV,
     ADMIN_SECRET_KEY:process.env.ADMIN_SECRET_KEY,
 
+    AZURE_BLOB_STORAGE:process.env.AZURE_BLOB_STORAGE,
+
 
     TMDB_API_KEY: process.env.TMDB_API_KEY,
 }

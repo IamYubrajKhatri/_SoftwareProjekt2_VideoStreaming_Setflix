@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/IamYubrajKhatri/_SoftwareProjekt2_VideoStreaming_Setflix#readme",
   "dependencies": {
+    "@azure/storage-blob": "^12.26.0",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
@@ -28,6 +29,7 @@
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.2",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.7"
   },

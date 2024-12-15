@@ -5,7 +5,7 @@ const movieSchema = new mongoose.Schema({
   description: { type: String, required: true },
   image:{ type:String},
   price:{ type:String},
-  videoUrl: { type: String, required: true }, // URL for video (YouTube or local)
+  videoUrl: { type: String }, // URL for video (YouTube or local)
   createdAt: { type: Date, default: Date.now },
 });
 

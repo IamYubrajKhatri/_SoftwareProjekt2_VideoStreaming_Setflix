@@ -59,9 +59,11 @@ function AdminDashboard() {
     formData.append('description', description);
     formData.append('video', video);
 
+   
+
     try {
-      const response = await axios.post('/api/videos/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await axios.post('http://localhost:4001/api/admin/upload-video', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }, // Required for file uploads
       });
       toast.success('Video uploaded successfully!');
       setMovies((prev) => [...prev, response.data]); // Update movie list
