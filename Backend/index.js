@@ -28,10 +28,13 @@ const __dirname = path.resolve();
 // Enable CORS for the frontend (http://localhost:5173)
 
 
+// index.js
 app.use(cors({
-  origin:NODE_ENV === 'production' ? 'https://setflix-mern-azure-app.azurewebsites.net' : 'http://localhost:5173',
+  origin: Env_Vars.NODE_ENV === 'production'
+    ? 'https://setflix-mern-azure-app.azurewebsites.net' // Production URL
+    : 'http://localhost:5173', // Development URL
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  credentials: true
+  credentials: true, // Allow cookies
 }));
 
 
