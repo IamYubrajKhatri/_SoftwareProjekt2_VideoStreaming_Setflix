@@ -26,10 +26,12 @@ const __dirname = path.resolve();
 
 
 // Enable CORS for the frontend (http://localhost:5173)
+
+
 app.use(cors({
-  origin: 'http://localhost:5173', // Frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE','Path'], // Allowed HTTP methods
-  credentials: true // If you need to allow cookies or Authorization headers
+  origin: process.env.NODE_ENV === 'production' ? 'https://setflixbackend-g5cyc7bzarh9cngu.germanywestcentral-01.azurewebsites.net' : 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  credentials: true
 }));
 
 
@@ -45,7 +47,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/movies",protectRoute,moviesRoute)
 app.use("/api/admin", adminRoute);
 
-
+//this knows where the frontend projekt is stored and where it runs
 if(Env_Vars.NODE_ENV==="production"){
   app.use(express.static(path.join(__dirname,"/Frontend/dist")));//now this is our react app
 
