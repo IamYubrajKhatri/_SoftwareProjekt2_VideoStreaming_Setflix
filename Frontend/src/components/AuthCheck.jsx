@@ -13,7 +13,7 @@ const useAuthCheck = () => {
       try {
         // Assuming you are using cookies with JWT token
         axios.defaults.withCredentials = true;
-        const response = await axios.get("http://localhost:4001/api/auth/me"); // The backend route to check for user status
+        const response = await axios.get("/api/auth/me"); // The backend route to check for user status
         setIsAuthenticated(true);
       } catch (error) {
         setIsAuthenticated(false); // If there is an error, set to false (unauthorized)

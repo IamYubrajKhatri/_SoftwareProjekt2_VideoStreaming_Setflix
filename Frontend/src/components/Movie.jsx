@@ -23,7 +23,7 @@ function Movie() {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await axios.get("http://localhost:4001/api/movies/"); 
+        const response = await axios.get("/api/movies/"); 
         setMovies(response.data); // Assuming the API returns an array of all movies
         setLoading(false);
       } catch (err) {

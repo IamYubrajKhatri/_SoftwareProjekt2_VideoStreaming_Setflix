@@ -19,7 +19,7 @@ function Favourite() {
     // Fetch the user's favorite movies when the component loads
     const fetchFavorites = async () => {
       try {
-        const response = await axios.get('http://localhost:4001/api/movies/favorites/{:userId}', {
+        const response = await axios.get('/api/movies/favorites/{:userId}', {
           withCredentials: true, // Send the JWT cookie
         });
 

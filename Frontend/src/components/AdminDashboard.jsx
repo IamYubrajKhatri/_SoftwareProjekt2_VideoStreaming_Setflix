@@ -25,10 +25,10 @@ function AdminDashboard() {
 
     const fetchData = async () => {
       try {
-        const movieResponse = await axios.get('http://localhost:4001/api/movies/');
+        const movieResponse = await axios.get('/api/movies/');
         setMovies(movieResponse.data);
 
-        const userResponse = await axios.get('http://localhost:4001/api/admin/getAllUsers');
+        const userResponse = await axios.get('/api/admin/getAllUsers');
          // Check if the response contains the 'users' array
       if (userResponse.data.success && Array.isArray(userResponse.data.users)) {
         setUsers(userResponse.data.users); // Extract the users array
@@ -66,7 +66,7 @@ function AdminDashboard() {
     formData.append('video', video);
 
     try {
-      const response = await axios.post('http://localhost:4001/api/admin/upload-video', formData, {
+      const response = await axios.post('/api/admin/upload-video', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }, // Required for file uploads
       });
       toast.success('Video uploaded successfully!');
@@ -89,7 +89,7 @@ function AdminDashboard() {
     try {
       await axios.request({
         method: 'DELETE',
-        url: `http://localhost:4001/api/admin/delete-video`,
+        url: `/api/admin/delete-video`,
         data: { videoId, videoUrl }, // Pass both ID and URL in the request body
       });
       toast.success('Video deleted successfully!');
@@ -112,7 +112,7 @@ function AdminDashboard() {
     }
 
     try {
-      const response = await axios.post('http://localhost:4001/api/admin/create-user', { username, email,password });
+      const response = await axios.post('/api/admin/create-user', { username, email,password });
       toast.success('User added successfully!');
       setUsers((prev) => [...prev, response.data]); // Update user list
 
@@ -129,7 +129,7 @@ function AdminDashboard() {
 // Delete user from database
 const handleDeleteUser = async (userId) => {
   try {
-    const response = await axios.delete(`http://localhost:4001/api/admin/delete-user/${userId}`);
+    const response = await axios.delete(`/api/admin/delete-user/${userId}`);
     if (response.data.success) {
       toast.success('User deleted successfully!');
       setUsers((prev) => prev.filter((user) => user._id !== userId)); // Update user list

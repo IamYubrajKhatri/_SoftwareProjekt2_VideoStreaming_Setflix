@@ -22,7 +22,7 @@ function VideoPlayer() {
     // Fetch movie details from the backend
     const fetchMovie = async () => {
       try {
-        const response = await axios.get(`http://localhost:4001/api/movies/${id}`); 
+        const response = await axios.get(`/api/movies/${id}`); 
         setMovie(response.data);
         setLoading(false);
       } catch (err) {

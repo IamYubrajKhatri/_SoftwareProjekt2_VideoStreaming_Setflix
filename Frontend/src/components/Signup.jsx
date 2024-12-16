@@ -36,7 +36,7 @@ function Signup() {
 
 
     try { {/* do post req to backend and give these value fron userInfo like postman */}
-      const res = await axios.post("http://localhost:4001/api/auth/signup", userInfo);
+      const res = await axios.post("/api/auth/signup", userInfo);
       console.log(res.data)
       if (res.data) {
         toast.success("Signup Successful! Check your email for the verification code.");

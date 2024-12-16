@@ -33,7 +33,7 @@ function Navbar() {
     const checkLoginState = async () => {
       try {
         axios.defaults.withCredentials = true; // Ensure cookies are sent
-        const res = await axios.get("http://localhost:4001/api/auth/me");
+        const res = await axios.get("/api/auth/me");
         setUser(res.data.user); // Set user info if logged in
       } catch (err) {
         setUser(null); // If error, assume user is not logged in
@@ -46,7 +46,7 @@ function Navbar() {
   // Handle logout button click
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:4001/api/auth/logout");
+      await axios.post("/api/auth/logout");
       setUser(null); // Clear user state after logout
       toast.success("Logged out successfully!");
       navigate("/"); // Redirect to home page
@@ -79,7 +79,7 @@ function Navbar() {
     }
 
     try {
-      const res = await axios.get(`http://localhost:4001/api/movies/search?query=${searchTerm}`);
+      const res = await axios.get(`/api/movies/search?query=${searchTerm}`);
       setSearchResults(res.data.results); // Set search results
 
       if (res.data.results.length === 0) {

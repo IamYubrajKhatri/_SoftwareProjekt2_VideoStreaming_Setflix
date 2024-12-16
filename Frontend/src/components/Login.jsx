@@ -22,7 +22,7 @@ function Login({onLoginSuccess}) {
   }
 
 try {
-  const res = await axios.post("http://localhost:4001/api/auth/login",userInfoLogin,{
+  const res = await axios.post("/api/auth/login",userInfoLogin,{
     withCredentials: true })// Enables sending/receiving cookies
     if(res.data){
       console.log(res.data)

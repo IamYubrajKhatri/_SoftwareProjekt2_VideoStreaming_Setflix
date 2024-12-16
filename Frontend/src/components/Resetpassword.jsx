@@ -19,7 +19,7 @@ function ResetPassword() {
         //we send server or backend a post req with the given user credientals
         //we put user given email and code with data.email data.code
         //left side is like postman variable we created in backend(email,code) 
-      const res = await axios.post("http://localhost:4001/api/auth/reset-password", {
+      const res = await axios.post("/api/auth/reset-password", {
         
         
         resetPasswordOtp:data.code,

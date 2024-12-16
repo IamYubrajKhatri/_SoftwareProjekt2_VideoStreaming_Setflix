@@ -15,7 +15,7 @@ const useAuthCheckAdmin = () => {
         axios.defaults.withCredentials = true;
 
         // Backend route to fetch user information, including admin status
-        const response = await axios.get("http://localhost:4001/api/auth/me");
+        const response = await axios.get("/api/auth/me");
 
         // Check if the user has admin privileges
         if (response.data.user && response.data.user.isAdmin) {
