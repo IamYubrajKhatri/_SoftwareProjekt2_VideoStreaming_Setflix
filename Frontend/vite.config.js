@@ -10,7 +10,7 @@ export default defineConfig({
   server:{
     proxy:{
       "/api":{
-        target:"https://setflixbackend-g5cyc7bzarh9cngu.germanywestcentral-01.azurewebsites.net/",
+        target:"https://setflix-mern-azure-app.azurewebsites.net",
       }
     }
   }
