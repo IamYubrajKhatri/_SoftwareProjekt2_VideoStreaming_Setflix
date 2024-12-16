@@ -7,22 +7,15 @@ const dotenv = require('dotenv');
 import express from "express";
 
 import authRoute from "./route/auth.route.js";
-import movieRoutes from "./route/movie.route.js"
-import tvRoutes from "./route/tv.route.js"
-import searchRoutes from "./route/search.route.js"
 import moviesRoute from "./route/movie1.router.js"
-
 import adminRoute from "./route/admin.route.js"
 
 // Import CORS middleware helps to connet twi different front and backend ports
 import cors from 'cors'; 
 
-
 import { Env_Vars } from "./config/env.Vars.js";
 import { connectDB } from "./config/db.js";
 import { protectRoute } from "./middleware/protectRoute.js";
-
-
 
 import cookieParser from "cookie-parser";
 
@@ -47,12 +40,8 @@ app.use(express.json());// will allow us to use req.body ..for eg i use postman 
 app.use(cookieParser());
 //we created a variable name authRoutes for the files and imported it above so it goes to specific destination
 app.use("/api/auth", authRoute);
-app.use("/api/movie",protectRoute,movieRoutes);
-app.use("/api/tv",protectRoute,tvRoutes);
-app.use("/api/search",protectRoute,searchRoutes);
 app.use("/api/movies",protectRoute,moviesRoute)
 app.use("/api/admin", adminRoute);
-
 
 /*
 app.get('/', (req, res) => {         // / is a home route

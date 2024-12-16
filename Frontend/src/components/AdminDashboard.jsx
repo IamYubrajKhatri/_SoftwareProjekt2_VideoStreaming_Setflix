@@ -65,8 +65,6 @@ function AdminDashboard() {
     formData.append('description', description);
     formData.append('video', video);
 
-   
-
     try {
       const response = await axios.post('http://localhost:4001/api/admin/upload-video', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }, // Required for file uploads

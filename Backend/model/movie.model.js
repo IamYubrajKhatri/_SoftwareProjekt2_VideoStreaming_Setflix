@@ -7,6 +7,7 @@ const movieSchema = new mongoose.Schema({
   price:{ type:String},
   videoUrl: { type: String }, // URL for video (YouTube or local)
   createdAt: { type: Date, default: Date.now },
+ 
 });
 
 const Movie = mongoose.model("Movie", movieSchema);

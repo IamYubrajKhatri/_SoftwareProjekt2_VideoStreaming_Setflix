@@ -40,7 +40,7 @@ function Movie() {
 // Handle delete request
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:4001/api/movies/${id}`); // Backend endpoint for deletion
+      await axios.delete(`http://localhost:4001/api/admin/delete-video/`); // Backend endpoint for deletion
       setMovies((prevMovies) => prevMovies.filter((movie) => movie._id !== id)); // Update state
     } catch (err) {
       console.error("Error deleting movie:", err);

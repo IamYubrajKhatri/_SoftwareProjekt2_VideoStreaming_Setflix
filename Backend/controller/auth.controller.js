@@ -6,7 +6,7 @@ import bcryptjs from "bcryptjs";
 //to send verification code
 import { SendVerificationCode, sendResetPasswordOtp,WelcomeEmail ,resetPasswordSuccessfullEmail} from "../middleware/Email.js"
 import { generateTokenAndSetCookie } from "../utils/generateToken.js"
-import { generateTokenAndSetCookieAdmin } from "../utils/generateToken.js";
+
 
 // export const signup=(req,res)=>{} an alternative to down one
 export async function signup(req,res){
