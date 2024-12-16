@@ -29,7 +29,7 @@ const __dirname = path.resolve();
 
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? 'https://setflixbackend-g5cyc7bzarh9cngu.germanywestcentral-01.azurewebsites.net' : 'http://localhost:5173',
+  origin: Env_Vars.NODE_ENV === 'production' ? 'https://setflixbackend-g5cyc7bzarh9cngu.germanywestcentral-01.azurewebsites.net' : 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true
 }));
