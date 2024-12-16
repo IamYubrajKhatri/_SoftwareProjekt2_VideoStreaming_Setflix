@@ -29,7 +29,7 @@ const __dirname = path.resolve();
 
 
 app.use(cors({
-  origin: Env_Vars.NODE_ENV === 'production' ? 'https://setflix-mern-azure-app.azurewebsites.net' : 'http://localhost:5173',
+  origin:NODE_ENV === 'production' ? 'https://setflix-mern-azure-app.azurewebsites.net' : 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true
 }));
