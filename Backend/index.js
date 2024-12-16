@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 */
 
 import express from "express";
+import path from 'path';
 
 import authRoute from "./route/auth.route.js";
 import moviesRoute from "./route/movie1.router.js"
@@ -21,6 +22,7 @@ import cookieParser from "cookie-parser";
 
 
 const app = express();
+const __dirname = path.resolve();
 
 
 // Enable CORS for the frontend (http://localhost:5173)
@@ -42,6 +44,11 @@ app.use(cookieParser());
 app.use("/api/auth", authRoute);
 app.use("/api/movies",protectRoute,moviesRoute)
 app.use("/api/admin", adminRoute);
+
+
+if(Env_Vars.NODE_ENV==="production"){
+  
+}
 
 /*
 app.get('/', (req, res) => {         // / is a home route

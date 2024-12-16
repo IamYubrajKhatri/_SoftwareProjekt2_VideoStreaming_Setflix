@@ -113,8 +113,8 @@ export async function uploadVideo(req,res){
 }
 
 export async function deleteVideo(req, res) {
-    //const { videoId } = req.params;
-    const {videoId, videoUrl } = req.body;  // URL or path to the video in Blob Storage
+    // Extract videoId and videoUrl from the request body
+    const { videoId, videoUrl } = req.body;  
 
     console.log('Request Body:', req.body);  // Log the body to check if videoUrl is there
 
@@ -126,9 +126,11 @@ export async function deleteVideo(req, res) {
     try {
         // 1. Check if the videoUrl is provided and delete from Azure Blob Storage
         if (videoUrl) {
-            let blobName = videoUrl.split('/').pop();  // Get the blob name from the URL (last part)
+            // Extract the blob name from the URL (last part after '/')
+            let blobName = videoUrl.split('/').pop();  
+            blobName = decodeURIComponent(blobName);  // Decode URL-encoded blob name
 
-            console.log('Blob Name:', blobName);  // Check the extracted blob name
+            console.log('Blob Name:', blobName);  // Check the extracted and decoded blob name
 
             const containerName = 'videos';  // Replace with your actual container name
             const containerClient = blobServiceClient.getContainerClient(containerName);
@@ -136,9 +138,9 @@ export async function deleteVideo(req, res) {
 
             // Delete the blob (video) from the container
             const deleteResponse = await blobClient.deleteIfExists();
-            
-            if (deleteResponse.error) {
-                console.log(`Error deleting video from Azure Blob Storage: ${deleteResponse.error.message}`);
+
+            if (!deleteResponse.succeeded) {
+                console.log(`Error deleting video from Azure Blob Storage`);
                 return res.status(500).json({
                     success: false,
                     message: 'Failed to delete video from Azure Blob Storage.',
@@ -173,6 +175,7 @@ export async function deleteVideo(req, res) {
         });
     }
 }
+
 
 
 export async function getAllUser(req,res) {
