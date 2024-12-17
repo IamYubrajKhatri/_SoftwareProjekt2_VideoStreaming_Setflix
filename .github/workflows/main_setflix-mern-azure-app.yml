@@ -50,7 +50,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
-          app-name: 'Setflix-mern-azure-app'
+          app-name: 'setflix'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0AE3551760B84D7CADC09AD00CE4E341 }}
           package: .
